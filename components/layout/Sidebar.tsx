@@ -60,7 +60,7 @@ export default function Sidebar() {
             </span>
           </Link>
           <Link
-            href="#"
+            href="/dashboard/roles"
             className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
           >
             <span className="material-symbols-outlined">admin_panel_settings</span>
