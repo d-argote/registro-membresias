@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Iron Ledger - Librería de Plantillas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#000000",
+              "inverse-on-surface": "#ecf1ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#00174b",
+              "surface-variant": "#d8e3fb",
+              "surface-tint": "#0053db",
+              "outline": "#76777d",
+              "tertiary": "#000000",
+              "surface-container-high": "#dee8ff",
+              "surface": "#f9f9ff",
+              "on-tertiary-fixed": "#2a1700",
+              "tertiary-container": "#2a1700",
+              "on-primary-fixed-variant": "#003ea8",
+              "primary-container": "#00174b",
+              "on-secondary-fixed": "#0d1c2e",
+              "inverse-primary": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "primary-fixed": "#dbe1ff",
+              "on-primary-container": "#497cff",
+              "on-secondary-fixed-variant": "#3a485b",
+              "surface-container-highest": "#d8e3fb",
+              "background": "#f9f9ff",
+              "surface-container-low": "#f0f3ff",
+              "on-surface-variant": "#45464d",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#b87500",
+              "secondary-container": "#d5e3fc",
+              "on-background": "#111c2d",
+              "on-tertiary": "#ffffff",
+              "inverse-surface": "#263143",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed": "#d5e3fc",
+              "on-surface": "#111c2d",
+              "surface-dim": "#cfdaf2",
+              "surface-bright": "#f9f9ff",
+              "error": "#ba1a1a",
+              "secondary": "#515f74",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#b9c7df",
+              "tertiary-fixed-dim": "#ffb95f",
+              "tertiary-fixed": "#ffddb8",
+              "on-secondary-container": "#57657a",
+              "on-error": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "outline-variant": "#c6c6cd",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e7eeff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-slate-950 shadow-2xl shadow-slate-900/5 flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-2 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded flex items-center justify-center text-on-primary font-black">TL</div>
+<div>
+<h2 class="text-lg font-black tracking-widest uppercase text-slate-900 dark:text-white leading-none">The Atelier</h2>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Premium Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+<span>Biblioteca</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span>Programas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Atletas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span>Inventario</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Configuración</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 space-y-1">
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-md font-semibold text-sm mb-4 scale-95 active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Nueva Plantilla
+            </button>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-primary transition-colors text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Soporte</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-error transition-colors text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col p-8 lg:p-12 gap-10">
+<!-- Top Toolbar -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-1">
+<h1 class="text-3xl font-extrabold tracking-tighter text-on-background">Librería de Plantillas</h1>
+<p class="text-on-surface-variant text-sm font-medium">Gestiona y personaliza tus protocolos de entrenamiento.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="pl-10 pr-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm w-64 focus:ring-1 focus:ring-surface-tint transition-all placeholder:text-outline-variant" placeholder="Buscar plantillas..." type="text"/>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-low rounded-lg text-sm font-semibold text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                        Categoría
+                    </button>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-tint text-on-primary rounded-md font-bold text-sm shadow-lg shadow-surface-tint/20 hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    Nueva Plantilla
+                </button>
+</div>
+</header>
+<!-- Templates Grid (Bento-inspired asymmetrical clean grid) -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Template Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between group hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-300 border border-transparent hover:border-outline-variant/10">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Fuerza</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="content_copy">content_copy</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/30 text-outline hover:text-error rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h3 class="text-lg font-bold text-on-background leading-tight mb-1">Rutina de Hipertrofia de Pecho</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Maximizar volumen en pectorales mediante tensión mecánica y estrés metabólico.</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-outline-variant/5">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="exercise">exercise</span>
+<span class="text-xs font-semibold">8 Ejercicios</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="schedule">schedule</span>
+<span class="text-xs font-semibold">75 min</span>
+</div>
+</div>
+</div>
+<!-- Template Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between group hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-300 border border-transparent hover:border-outline-variant/10">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2.5 py-1 rounded-full bg-tertiary-container text-tertiary-fixed text-[10px] font-bold uppercase tracking-wider">Resistencia</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="content_copy">content_copy</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/30 text-outline hover:text-error rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h3 class="text-lg font-bold text-on-background leading-tight mb-1">Circuito Metabólico Full Body</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Optimización de la quema calórica y mejora de la capacidad cardiovascular.</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-outline-variant/5">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="exercise">exercise</span>
+<span class="text-xs font-semibold">12 Ejercicios</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="schedule">schedule</span>
+<span class="text-xs font-semibold">45 min</span>
+</div>
+</div>
+</div>
+<!-- Template Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between group hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-300 border border-transparent hover:border-outline-variant/10">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-primary-fixed-variant text-[10px] font-bold uppercase tracking-wider">Movilidad</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="content_copy">content_copy</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/30 text-outline hover:text-error rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h3 class="text-lg font-bold text-on-background leading-tight mb-1">Recuperación Activa de Cadera</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Protocolo de descompresión y apertura de cadera para atletas de fuerza.</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-outline-variant/5">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="exercise">exercise</span>
+<span class="text-xs font-semibold">6 Ejercicios</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="schedule">schedule</span>
+<span class="text-xs font-semibold">20 min</span>
+</div>
+</div>
+</div>
+<!-- Template Card 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between group hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-300 border border-transparent hover:border-outline-variant/10">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Fuerza</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-outline hover:text-primary rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="content_copy">content_copy</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/30 text-outline hover:text-error rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h3 class="text-lg font-bold text-on-background leading-tight mb-1">Powerlifting: SBD Básico</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Enfoque en técnica y progresión de cargas en los tres levantamientos principales.</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-outline-variant/5">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="exercise">exercise</span>
+<span class="text-xs font-semibold">4 Ejercicios</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-base" data-icon="schedule">schedule</span>
+<span class="text-xs font-semibold">90 min</span>
+</div>
+</div>
+</div>
+<!-- Template Card 5 (Empty/Add State Aesthetic) -->
+<div class="bg-surface-container-low/40 p-6 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/20 group hover:border-surface-tint/50 transition-all cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:bg-surface-tint group-hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</div>
+<span class="text-sm font-bold text-on-surface-variant group-hover:text-surface-tint transition-colors">Crear Nueva Plantilla</span>
+</div>
+</section>
+<!-- Metrics Strip (Bottom Floating Accent) -->
+<footer class="mt-auto pt-10">
+<div class="bg-primary p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+</div>
+<div class="flex gap-12 relative z-10">
+<div class="text-on-primary">
+<p class="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-1">Total Plantillas</p>
+<p class="text-3xl font-black tracking-tighter leading-none">24</p>
+</div>
+<div class="text-on-primary">
+<p class="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-1">Uso Mensual</p>
+<p class="text-3xl font-black tracking-tighter leading-none">142</p>
+</div>
+<div class="hidden sm:block text-on-primary">
+<p class="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-1">Populares</p>
+<p class="text-3xl font-black tracking-tighter leading-none">Hipertrofia</p>
+</div>
+</div>
+<div class="flex items-center gap-3 relative z-10">
+<p class="text-xs text-on-primary font-medium opacity-80 text-right hidden lg:block">¿Necesitas ayuda con tus programas?<br/>Revisa nuestra guía de periodización.</p>
+<button class="bg-white text-primary px-6 py-2.5 rounded font-bold text-xs uppercase tracking-widest hover:bg-surface-container-high transition-colors">Ver Documentación</button>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

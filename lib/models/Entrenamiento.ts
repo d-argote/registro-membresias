@@ -9,6 +9,7 @@ export class Ejercicio {
   private repeticiones: number;
   private descansoSegundos: number;
   private orden: number;
+  private instrucciones: string | null;
 
   constructor(
     id: string | null = null,
@@ -17,7 +18,8 @@ export class Ejercicio {
     series: number,
     repeticiones: number,
     descansoSegundos: number,
-    orden: number
+    orden: number,
+    instrucciones: string | null = null
   ) {
     this.id = id;
     this.planId = planId;
@@ -26,6 +28,7 @@ export class Ejercicio {
     this.repeticiones = repeticiones;
     this.descansoSegundos = descansoSegundos;
     this.orden = orden;
+    this.instrucciones = instrucciones;
   }
 
   public getNombre(): string { return this.nombre; }
@@ -33,19 +36,22 @@ export class Ejercicio {
   public getRepeticiones(): number { return this.repeticiones; }
   public getDescanso(): number { return this.descansoSegundos; }
   public getOrden(): number { return this.orden; }
+  public getInstrucciones(): string | null { return this.instrucciones; }
 
   public async actualizar(
     nombre?: string, 
     series?: number, 
     repeticiones?: number, 
     descanso?: number, 
-    orden?: number
+    orden?: number,
+    instrucciones?: string | null
   ): Promise<void> {
     if (nombre !== undefined) this.nombre = nombre;
     if (series !== undefined) this.series = series;
     if (repeticiones !== undefined) this.repeticiones = repeticiones;
     if (descanso !== undefined) this.descansoSegundos = descanso;
     if (orden !== undefined) this.orden = orden;
+    if (instrucciones !== undefined) this.instrucciones = instrucciones;
 
     if (!this.id) {
        // Create
@@ -56,7 +62,8 @@ export class Ejercicio {
          series: this.series,
          repeticiones: this.repeticiones,
          descanso_segundos: this.descansoSegundos,
-         orden: this.orden
+         orden: this.orden,
+         instrucciones: this.instrucciones
        }).select().single();
        if (error) throw new Error("Error creando ejercicio: " + error.message);
        this.id = data.id;
@@ -68,7 +75,8 @@ export class Ejercicio {
          series: this.series,
          repeticiones: this.repeticiones,
          descanso_segundos: this.descansoSegundos,
-         orden: this.orden
+         orden: this.orden,
+         instrucciones: this.instrucciones
        }).eq("id", this.id);
        if (error) throw new Error("Error actualizando ejercicio: " + error.message);
     }
@@ -78,7 +86,7 @@ export class Ejercicio {
     const db = getDbClient();
     const { data, error } = await db.from("ejercicio").select("*").eq("plan_id", planId).order("orden", { ascending: true });
     if (error || !data) return [];
-    return data.map((d: any) => new Ejercicio(d.id, d.plan_id, d.nombre, d.series, d.repeticiones, d.descanso_segundos, d.orden));
+    return data.map((d: any) => new Ejercicio(d.id, d.plan_id, d.nombre, d.series, d.repeticiones, d.descanso_segundos, d.orden, d.instrucciones));
   }
 }
 
@@ -180,7 +188,7 @@ export class PlanEntrenamiento {
     }).select().single();
     if (error) throw new Error("Error creando plan: " + error.message);
     this.id = data.id;
-    this.fechaCreacion = new Date(data.created_at);
+    this.fechaCreacion = new Date(data.fecha_creacion);
   }
 
   public async modificar(nombre: string, objetivo: string): Promise<void> {
@@ -232,11 +240,21 @@ export class PlanEntrenamiento {
 
   public static async fetchByEntrenador(entrenadorId: string): Promise<PlanEntrenamiento[]> {
     const db = getDbClient();
-    const { data, error } = await db.from("plan_entrenamiento").select("*").eq("autor_id", entrenadorId).order("created_at", { ascending: false });
+    const { data, error } = await db.from("plan_entrenamiento").select("*").eq("autor_id", entrenadorId).order("fecha_creacion", { ascending: false });
     if (error || !data) return [];
     
     return data.map((p: any) => new PlanEntrenamiento(
-      p.id, p.nombre, p.objetivo, p.activo, new Date(p.created_at), new Date(p.updated_at || p.created_at), p.autor_id
+      p.id, p.nombre, p.objetivo, p.activo, new Date(p.fecha_creacion), new Date(p.fecha_creacion), p.autor_id
+    ));
+  }
+
+  public static async fetchAll(): Promise<PlanEntrenamiento[]> {
+    const db = getDbClient();
+    const { data, error } = await db.from("plan_entrenamiento").select("*").order("fecha_creacion", { ascending: false });
+    if (error || !data) return [];
+    
+    return data.map((p: any) => new PlanEntrenamiento(
+      p.id, p.nombre, p.objetivo, p.activo, new Date(p.fecha_creacion), new Date(p.fecha_creacion), p.autor_id
     ));
   }
 
@@ -244,6 +262,6 @@ export class PlanEntrenamiento {
     const db = getDbClient();
     const { data, error } = await db.from("plan_entrenamiento").select("*").eq("id", planId).single();
     if (error || !data) return null;
-    return new PlanEntrenamiento(data.id, data.nombre, data.objetivo, data.activo, new Date(data.created_at), new Date(data.updated_at || data.created_at), data.autor_id);
+    return new PlanEntrenamiento(data.id, data.nombre, data.objetivo, data.activo, new Date(data.fecha_creacion), new Date(data.fecha_creacion), data.autor_id);
   }
 }

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workout Creator | The Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-container": "#e7eeff",
+                "secondary": "#515f74",
+                "on-tertiary-container": "#b87500",
+                "on-primary": "#ffffff",
+                "outline-variant": "#c6c6cd",
+                "surface-container-high": "#dee8ff",
+                "on-secondary-container": "#57657a",
+                "primary": "#000000",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#b9c7df",
+                "on-surface": "#111c2d",
+                "on-secondary-fixed": "#0d1c2e",
+                "surface-container-highest": "#d8e3fb",
+                "on-background": "#111c2d",
+                "surface-container-low": "#f0f3ff",
+                "background": "#f9f9ff",
+                "surface-tint": "#0053db",
+                "on-surface-variant": "#45464d",
+                "on-secondary-fixed-variant": "#3a485b",
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#653e00",
+                "surface-dim": "#cfdaf2",
+                "surface": "#f9f9ff",
+                "on-primary-fixed-variant": "#003ea8",
+                "tertiary-fixed-dim": "#ffb95f",
+                "on-primary-fixed": "#00174b",
+                "surface-variant": "#d8e3fb",
+                "inverse-primary": "#b4c5ff",
+                "inverse-on-surface": "#ecf1ff",
+                "on-tertiary-fixed": "#2a1700",
+                "primary-container": "#00174b",
+                "secondary-container": "#d5e3fc",
+                "outline": "#76777d",
+                "tertiary": "#000000",
+                "on-secondary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "primary-fixed-dim": "#b4c5ff",
+                "primary-fixed": "#dbe1ff",
+                "on-primary-container": "#497cff",
+                "error-container": "#ffdad6",
+                "surface-bright": "#f9f9ff",
+                "secondary-fixed": "#d5e3fc",
+                "tertiary-fixed": "#ffddb8",
+                "inverse-surface": "#263143",
+                "tertiary-container": "#2a1700",
+                "on-error-container": "#93000a"
+              },
+              fontFamily: {
+                "headline": ["Inter"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .number-input::-webkit-inner-spin-button,
+        .number-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .number-input {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased font-body">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col bg-slate-50 dark:bg-slate-950/80 backdrop-blur-xl font-inter antialiased tracking-tight docked left-0 h-screen w-64 border-r-0 z-50">
+<div class="p-8">
+<h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-slate-50">The Atelier</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mt-1">Precision Management</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-slate-50 font-bold border-r-2 border-slate-900 dark:border-slate-50 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800/50 scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span class="text-sm font-medium">Plans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="text-sm font-medium">Roles</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full py-3 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded transition-transform active:scale-95 hover:bg-slate-800">
+                New Template
+            </button>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center h-16 px-8 ml-64 w-[calc(100%-16rem)] fixed top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-40 border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="text-sm font-bold tracking-tight text-primary">Workout Creator</span>
+<nav class="flex gap-6">
+<a class="text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white pb-1 text-sm font-medium tracking-wide uppercase opacity-80" href="#">Templates</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-50 transition-colors text-sm font-medium tracking-wide uppercase" href="#">Library</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden ml-2">
+<img alt="Admin User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO057gR-ASnC_75fwyV33CjJrk-kuIpFXwH3W3sRAPWrycJwixiJFh74qZ-F3Gs1bcL5SqKWlhlxEhjWpv3Cmm3l8HupYFLQlCwQq4V75-B7kFRdGL_xKxBClm1MDYnWVh8EZIJC6EdcjZ1UXoZN2eN9fcDn_l4TfU0Tjm5vpMeo7Q9AoMUrj0_cWlcVFxo_v6g3GvGy5OZqX_TI_VJRypbZ8Duh85E0oU51w97hS_FLX_2seySoyvvvhNcnkuGB5feD4kb_0G4Os-"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 pb-32 px-8 min-h-screen">
+<div class="max-w-4xl mx-auto py-12">
+<!-- Header Section: Plan Definition -->
+<section class="bg-surface-container-low rounded-xl p-10 mb-12 border border-outline-variant/10 shadow-sm">
+<div class="space-y-8">
+<div>
+<label class="block text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant mb-4">Plan Definition</label>
+<input class="w-full text-4xl font-black tracking-tighter bg-transparent border-0 border-b-2 border-outline-variant/20 focus:ring-0 focus:border-primary px-0 pb-4 placeholder:text-surface-dim transition-all" placeholder="Nombre del Plan de Entrenamiento" type="text" value="Rutinaria de Pecho Avanzada"/>
+</div>
+<div class="relative">
+<label class="block text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant mb-4">Objetivo General del Plan</label>
+<textarea class="w-full text-lg bg-surface-container-lowest border border-outline-variant/10 focus:ring-1 focus:ring-primary/20 rounded-lg p-6 placeholder:text-slate-400/50 resize-none transition-all" placeholder="Describe el enfoque principal de este entrenamiento..." rows="3">Este plan está diseñado para maximizar la hipertrofia del pectoral mayor y menor mediante técnicas de alta intensidad y volumen controlado.</textarea>
+<span class="absolute bottom-4 right-4 text-[10px] font-mono text-on-surface-variant/60">124 / 250</span>
+</div>
+</div>
+</section>
+<!-- Exercises Section -->
+<div class="space-y-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Ejercicios del Plan</h2>
+<span class="text-[10px] font-medium text-on-surface-variant/60">2 EJERCICIOS AÑADIDOS</span>
+</div>
+<!-- Exercise Card 1 -->
+<div class="bg-white border border-outline-variant/20 rounded-xl overflow-hidden group transition-all hover:shadow-lg hover:border-primary/20">
+<div class="p-6">
+<div class="flex items-start justify-between gap-6 mb-6">
+<div class="flex-1">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-1">Nombre del Ejercicio</label>
+<input class="w-full text-xl font-bold bg-transparent border-0 border-b border-transparent focus:border-primary focus:ring-0 px-0 pb-1 transition-colors" type="text" value="Press de Banca con Barra"/>
+</div>
+<button class="p-2 text-on-surface-variant/40 hover:text-error transition-colors rounded-lg hover:bg-error/5">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Series</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="4"/>
+</div>
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Repeticiones</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="12"/>
+</div>
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Descanso (s)</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="90"/>
+</div>
+</div>
+<div>
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Instrucciones específicas</label>
+<textarea class="w-full bg-surface-container-low/30 border border-outline-variant/10 rounded-lg p-3 text-sm resize-none focus:ring-1 focus:ring-primary/10 transition-all placeholder:text-on-surface-variant/30" placeholder="Ej: Controlar el descenso en 3 segundos..." rows="2">Centrarse en la retracción escapular durante todo el movimiento.</textarea>
+</div>
+</div>
+</div>
+<!-- Exercise Card 2 -->
+<div class="bg-white border border-outline-variant/20 rounded-xl overflow-hidden group transition-all hover:shadow-lg hover:border-primary/20">
+<div class="p-6">
+<div class="flex items-start justify-between gap-6 mb-6">
+<div class="flex-1">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-1">Nombre del Ejercicio</label>
+<input class="w-full text-xl font-bold bg-transparent border-0 border-b border-transparent focus:border-primary focus:ring-0 px-0 pb-1 transition-colors" type="text" value="Aperturas con Mancuernas"/>
+</div>
+<button class="p-2 text-on-surface-variant/40 hover:text-error transition-colors rounded-lg hover:bg-error/5">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Series</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="3"/>
+</div>
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Repeticiones</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="15"/>
+</div>
+<div class="bg-surface-container-low/50 rounded-lg p-3 border border-outline-variant/10">
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Descanso (s)</label>
+<input class="number-input w-full bg-transparent border-0 text-xl font-black text-primary p-0" type="number" value="60"/>
+</div>
+</div>
+<div>
+<label class="block text-[9px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-2">Instrucciones específicas</label>
+<textarea class="w-full bg-surface-container-low/30 border border-outline-variant/10 rounded-lg p-3 text-sm resize-none focus:ring-1 focus:ring-primary/10 transition-all placeholder:text-on-surface-variant/30" placeholder="Ej: Mantener ligera flexión en los codos..." rows="2"></textarea>
+</div>
+</div>
+</div>
+<!-- Add Exercise Button -->
+<button class="w-full py-8 border-2 border-dashed border-outline-variant/30 rounded-xl text-on-surface-variant/60 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-3 group mt-4">
+<span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform" data-icon="add_circle">add_circle</span>
+<span class="text-xs font-bold uppercase tracking-[0.2em]">+ Añadir nuevo ejercicio</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 left-64 right-0 h-20 bg-white/95 backdrop-blur-xl flex items-center justify-between px-12 border-t border-outline-variant/10 z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-full border border-outline-variant/5">
+<span class="flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Borrador guardado · 14:20</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-8 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">
+                Vista Previa
+            </button>
+<button class="px-10 py-3 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded transition-all hover:bg-slate-800 hover:shadow-lg active:scale-[0.98]">
+                Guardar Plantilla
+            </button>
+</div>
+</footer>
+</body></html>
