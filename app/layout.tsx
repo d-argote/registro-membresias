@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Command Center | Kinetic Precision",
+  title: "Command Center | GymAccess Cloud",
   description: "Performance Metrics & Operational Vitality",
 };
 

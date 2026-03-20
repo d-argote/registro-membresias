@@ -1,22 +1,38 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    if (path === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+    return pathname.startsWith(path);
+  };
+
+  const activeClass = "flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-white font-bold bg-white dark:bg-slate-800 rounded-lg shadow-sm transition-all duration-200 ease-in-out active:scale-95";
+  const inactiveClass = "flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95";
+
+  // Note for reports: using "/dashboard/reports" even if the link is "#" for now
+  
   return (
     <aside className="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-xl z-50">
       <div className="flex flex-col h-full p-6 space-y-8">
         <div className="flex flex-col gap-1">
           <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
-            Kinetic Precision
+            GymAccess Cloud
           </span>
           <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant opacity-60">
-            Performance Atelier
+            SMART GYM PLATFORM
           </span>
         </div>
         <nav className="flex-1 space-y-2">
-          {/* Dashboard Active */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-white font-bold bg-white dark:bg-slate-800 rounded-lg shadow-sm transition-all duration-200 ease-in-out active:scale-95"
+            className={isActive("/dashboard") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
@@ -25,7 +41,7 @@ export default function Sidebar() {
           </Link>
           <Link
             href="/dashboard/clientes"
-            className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
+            className={isActive("/dashboard/clientes") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">group</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
@@ -34,7 +50,8 @@ export default function Sidebar() {
           </Link>
           <Link
             href="#"
-            className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
+            // Using a dummy path for Reports until we implement the actual route
+            className={isActive("/dashboard/reports") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">assessment</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
@@ -43,7 +60,7 @@ export default function Sidebar() {
           </Link>
           <Link
             href="/dashboard/membresias"
-            className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
+            className={isActive("/dashboard/membresias") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">card_membership</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
@@ -52,7 +69,7 @@ export default function Sidebar() {
           </Link>
           <Link
             href="/dashboard/entrenamiento"
-            className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
+            className={isActive("/dashboard/entrenamiento") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">fitness_center</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
@@ -61,7 +78,7 @@ export default function Sidebar() {
           </Link>
           <Link
             href="/dashboard/roles"
-            className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
+            className={isActive("/dashboard/roles") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">admin_panel_settings</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">

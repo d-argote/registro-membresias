@@ -36,10 +36,10 @@ export default function LoginPage() {
       <div className="w-full max-w-sm z-10 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
         <header className="text-center space-y-2">
           <h1 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
-            Kinetic Precision
+            GymAccess Cloud
           </h1>
           <p className="text-[10px] font-bold text-outline uppercase tracking-[0.3em]">
-            Command Center Access
+            SMART GYM PLATFORM
           </p>
         </header>
 
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
         <footer className="text-center">
           <p className="text-[9px] font-medium text-outline uppercase tracking-widest opacity-60">
-            Powered by KineticOS v1.0.4
+            Powered by GymAccess Cloud V1.0.0
           </p>
         </footer>
       </div>
