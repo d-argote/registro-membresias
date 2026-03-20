@@ -24,12 +24,12 @@ export default function Sidebar() {
             </span>
           </Link>
           <Link
-            href="#"
+            href="/dashboard/clientes"
             className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 ease-in-out active:scale-95"
           >
             <span className="material-symbols-outlined">group</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
-              Customers
+              Clientes
             </span>
           </Link>
           <Link
@@ -60,10 +60,13 @@ export default function Sidebar() {
             </span>
           </Link>
         </nav>
-        <button className="bg-primary text-on-primary py-3 px-4 rounded-lg font-bold text-sm tracking-tight flex items-center justify-center gap-2 transition-all active:scale-95">
-          <span className="material-symbols-outlined text-sm">add</span>
-          Add Member
-        </button>
+        <Link 
+          href="/dashboard/clientes/nuevo"
+          className="bg-primary text-on-primary py-3 px-4 rounded-lg font-bold text-sm tracking-tight flex items-center justify-center gap-2 transition-all active:scale-95 hover:opacity-90"
+        >
+          <span className="material-symbols-outlined text-sm">person_add</span>
+          Registrar Cliente
+        </Link>
       </div>
     </aside>
   );
