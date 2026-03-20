@@ -50,10 +50,10 @@ export default function RegistroCliente() {
 
   // Paso 2: Estado dinámico de huellas
   const [fingers, setFingers] = useState<Finger[]>([
-    { id: 1, name: "Índice Derecho",   status: "waiting", score: 0 },
-    { id: 2, name: "Medio Derecho",    status: "pending", score: 0 },
+    { id: 1, name: "Índice Derecho", status: "waiting", score: 0 },
+    { id: 2, name: "Medio Derecho", status: "pending", score: 0 },
     { id: 3, name: "Índice Izquierdo", status: "pending", score: 0 },
-    { id: 4, name: "Medio Izquierdo",  status: "pending", score: 0 },
+    { id: 4, name: "Medio Izquierdo", status: "pending", score: 0 },
   ]);
 
   // ─── Handlers ───────────────────────────────────────────────────────────────
@@ -193,9 +193,8 @@ export default function RegistroCliente() {
           <span className="w-8 h-[2px] bg-outline-variant/50" />
           <div className={`flex items-center gap-2 ${step === 2 ? "opacity-100" : "opacity-40"}`}>
             <span
-              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${
-                step === 2 ? "bg-primary text-on-primary" : "bg-surface-container-high text-outline"
-              }`}
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${step === 2 ? "bg-primary text-on-primary" : "bg-surface-container-high text-outline"
+                }`}
             >
               2
             </span>
@@ -349,14 +348,12 @@ export default function RegistroCliente() {
                       tieneDiscapacidad: !prev.tieneDiscapacidad,
                     }))
                   }
-                  className={`w-12 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out ${
-                    formData.tieneDiscapacidad ? "bg-surface-tint" : "bg-outline-variant"
-                  }`}
+                  className={`w-12 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out ${formData.tieneDiscapacidad ? "bg-surface-tint" : "bg-outline-variant"
+                    }`}
                 >
                   <div
-                    className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ${
-                      formData.tieneDiscapacidad ? "translate-x-6" : "translate-x-0"
-                    }`}
+                    className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ${formData.tieneDiscapacidad ? "translate-x-6" : "translate-x-0"
+                      }`}
                   />
                 </button>
               </div>

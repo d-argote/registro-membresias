@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { crearPlanAction } from "@/app/actions/entrenamientos";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function TemplateCreator() {
   const router = useRouter();
@@ -36,8 +37,14 @@ export default function TemplateCreator() {
     setLoading(true);
     setError("");
     
-    // Simulate trainer ID for now (usually from auth session)
-    const entrenadorId = "00000000-0000-0000-0000-000000000000"; 
+    // Fetch actual trainer ID from auth session
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+        setError("No hay una sesión activa. Vuelva a iniciar sesión.");
+        setLoading(false);
+        return;
+    }
+    const entrenadorId = session.user.id;
 
     // Formatting for action
     const dataToSend = {

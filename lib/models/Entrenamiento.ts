@@ -176,7 +176,7 @@ export class PlanEntrenamiento {
       nombre: this.nombre,
       objetivo: this.objetivo,
       activo: this.activo,
-      creado_por: this.creadorId,
+      autor_id: this.creadorId,
     }).select().single();
     if (error) throw new Error("Error creando plan: " + error.message);
     this.id = data.id;
@@ -232,11 +232,11 @@ export class PlanEntrenamiento {
 
   public static async fetchByEntrenador(entrenadorId: string): Promise<PlanEntrenamiento[]> {
     const db = getDbClient();
-    const { data, error } = await db.from("plan_entrenamiento").select("*").eq("creado_por", entrenadorId).order("created_at", { ascending: false });
+    const { data, error } = await db.from("plan_entrenamiento").select("*").eq("autor_id", entrenadorId).order("created_at", { ascending: false });
     if (error || !data) return [];
     
     return data.map((p: any) => new PlanEntrenamiento(
-      p.id, p.nombre, p.objetivo, p.activo, new Date(p.created_at), new Date(p.updated_at || p.created_at), p.creado_por
+      p.id, p.nombre, p.objetivo, p.activo, new Date(p.created_at), new Date(p.updated_at || p.created_at), p.autor_id
     ));
   }
 
@@ -244,6 +244,6 @@ export class PlanEntrenamiento {
     const db = getDbClient();
     const { data, error } = await db.from("plan_entrenamiento").select("*").eq("id", planId).single();
     if (error || !data) return null;
-    return new PlanEntrenamiento(data.id, data.nombre, data.objetivo, data.activo, new Date(data.created_at), new Date(data.updated_at || data.created_at), data.creado_por);
+    return new PlanEntrenamiento(data.id, data.nombre, data.objetivo, data.activo, new Date(data.created_at), new Date(data.updated_at || data.created_at), data.autor_id);
   }
 }

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { AuthService } from "@/lib/services/auth.service";
 import { RolUsuario } from "@/lib/models/usuario_sistema.model";
+import { crearUsuarioAdmin } from "@/app/actions/roles";
 
 interface StaffMember {
   id: string;
@@ -19,6 +19,7 @@ export default function RolesPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -27,9 +28,19 @@ export default function RolesPage() {
     rolId: RolUsuario.ENTRENADOR
   });
 
-  const fetchStaff = async () => {
+  const fetchStaffAndUser = async () => {
     setLoading(true);
     try {
+      // Fetch current user session to determine role
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: userData } = await supabase.from("usuario_sistema").select("rol_id").eq("id", session.user.id).single();
+        if (userData) {
+          setCurrentUserRole(userData.rol_id);
+        }
+      }
+
+      // Fetch staff
       const { data, error } = await supabase
         .from("usuario_sistema")
         .select(`
@@ -63,14 +74,20 @@ export default function RolesPage() {
 
 
   useEffect(() => {
-    fetchStaff();
+    fetchStaffAndUser();
   }, []);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
-      await AuthService.crearUsuario(
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        throw new Error("No hay una sesión activa. Por favor, vuelva a iniciar sesión.");
+      }
+
+      await crearUsuarioAdmin(
+        session.access_token,
         { nombre: formData.nombre, email: formData.email, password: formData.password },
         formData.rolId
       );
@@ -78,7 +95,7 @@ export default function RolesPage() {
       alert("✅ Usuario creado exitosamente.");
       setShowModal(false);
       setFormData({ nombre: "", email: "", password: "", rolId: RolUsuario.ENTRENADOR });
-      fetchStaff();
+      fetchStaffAndUser();
     } catch (error: any) {
       console.error("Error creating user:", error);
       alert(`❌ Error: ${error.message || "No se pudo crear el usuario"}`);
@@ -100,13 +117,15 @@ export default function RolesPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-primary text-on-primary px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2 shadow-lg shadow-primary/20"
-        >
-          <span className="material-symbols-outlined text-sm">person_add</span>
-          Crear Usuario
-        </button>
+        {currentUserRole === RolUsuario.ADMINISTRADOR && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-primary text-on-primary px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2 shadow-lg shadow-primary/20"
+          >
+            <span className="material-symbols-outlined text-sm">person_add</span>
+            Crear Usuario
+          </button>
+        )}
       </header>
 
       {/* Staff Table */}
