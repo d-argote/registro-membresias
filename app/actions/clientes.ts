@@ -131,3 +131,40 @@ export async function registrarCliente(
     return { success: false, error: msg };
   }
 }
+
+export async function actualizarCliente(
+  id: string,
+  data: Partial<ClientePayload>
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = getServerClient();
+
+  try {
+    const { error } = await supabase
+      .from("cliente")
+      .update({
+        numero_identificacion: data.numero_identificacion,
+        nombre: data.nombre,
+        email: data.email,
+        telefono: data.telefono,
+        direccion: data.direccion,
+        fecha_nacimiento: data.fecha_nacimiento,
+        tiene_discapacidad: data.tiene_discapacidad,
+        descripcion_discapacidad: 
+          data.tiene_discapacidad 
+            ? data.descripcion_discapacidad 
+            : null,
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.error("[Server Action] Error actualizando cliente:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[Server Action] Error inesperado:", msg);
+    return { success: false, error: msg };
+  }
+}

@@ -78,7 +78,7 @@ export class Membresia {
     this.fechaFin = new Date(data.fecha_fin + "T00:00:00");
     this.estado = data.estado_id;
     this.diasPreservados = data.dias_preservados || 0;
-    this.fechaCongelamiento = data.fecha_congelamiento ? new Date(data.fecha_congelamiento) : null;
+    this.tipoMembresiaId = data.tipo_membresia === 'Anual' ? TipoMembresia.ANUAL : TipoMembresia.MENSUAL;
   }
 
   /**
@@ -88,13 +88,11 @@ export class Membresia {
     const db = getDbClient();
     const payload = {
       cliente_id: this.clienteId,
-      tipo_membresia_id: this.tipoMembresiaId,
+      tipo_membresia: this.tipoMembresiaId === TipoMembresia.MENSUAL ? 'Mensual' : 'Anual',
       fecha_inicio: this.toISODate(this.fechaInicio),
       fecha_fin: this.toISODate(this.fechaFin),
       estado_id: this.estado,
-      fecha_congelamiento: this.fechaCongelamiento ? this.toISODate(this.fechaCongelamiento) : null,
       dias_preservados: this.diasPreservados,
-      creado_por: this.creadoPor
     };
 
     if (this.id) {

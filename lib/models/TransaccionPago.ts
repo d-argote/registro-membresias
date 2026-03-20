@@ -42,8 +42,8 @@ export class TransaccionPago {
       membresia_id: this.membresiaId,
       monto: this.monto,
       metodo_pago_id: this.metodoPagoId,
-      estado_recibo: !this.anulada,
-      registrada_por: registradaPor || null,
+      estado: this.anulada ? 'Anulada' : 'Aprobada',
+      usuario_ejecutor_id: registradaPor || null,
     };
     
     let res;

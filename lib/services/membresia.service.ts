@@ -110,11 +110,10 @@ export class MembresiaService {
         .from("membresia")
         .insert({
           cliente_id,
-          tipo_membresia_id,
+          tipo_membresia: tipo_membresia_id === TIPO_MEMBRESIA.MENSUAL ? 'Mensual' : 'Anual',
           fecha_inicio: newFechaInicioStr,
           fecha_fin: newFechaFinStr,
           estado_id: ESTADO_MEMBRESIA.ACTIVA,
-          creado_por: usuario_id,
         })
         .select()
         .single();
@@ -122,8 +121,6 @@ export class MembresiaService {
       if (createError) throw new Error("Error creating membership: " + createError.message);
       membresiaIdStr = newMembresia.id;
       
-      // If there was an existing expired one, we might want to ensure its state is VENCIDA.
-      // (This is standard cleanup, no harm in doing it).
       if (membresiaExistente && membresiaExistente.id !== membresiaIdStr) {
          await getServerClient().from("membresia").update({estado_id: ESTADO_MEMBRESIA.VENCIDA}).eq("id", membresiaExistente.id);
       }
@@ -134,12 +131,11 @@ export class MembresiaService {
       membresia_id: membresiaIdStr,
       metodo_pago_id,
       monto,
-      estado_recibo: true,
-      registrada_por: usuario_id,
+      estado: 'Aprobada',
+      usuario_ejecutor_id: usuario_id,
     });
 
     if (txError) {
-      // Rollback membership could be done here, but usually Supabase RPC handles atomic tx.
       throw new Error("Error inserting transaction: " + txError.message);
     }
 
