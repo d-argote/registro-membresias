@@ -35,7 +35,7 @@ export async function congelarAction(membresia_id: string, cliente_id: string) {
     const mem = new Membresia(membresia_id, cliente_id, TipoMembresia.MENSUAL, new Date(), new Date());
     await mem.load();
     await mem.congelar("Congelamiento solicitado por administrador");
-    
+
     revalidatePath(`/dashboard/clientes/${cliente_id}`);
     return { success: true, result: mem.getId() };
   } catch (error: any) {
@@ -48,7 +48,7 @@ export async function reactivarAction(membresia_id: string, cliente_id: string) 
     const mem = new Membresia(membresia_id, cliente_id, TipoMembresia.MENSUAL, new Date(), new Date());
     await mem.load();
     await mem.reactivar();
-    
+
     revalidatePath(`/dashboard/clientes/${cliente_id}`);
     return { success: true, result: mem.getId() };
   } catch (error: any) {
