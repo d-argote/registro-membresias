@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-container": "#57657a",
+              "inverse-surface": "#263143",
+              "surface-variant": "#d8e3fb",
+              "outline": "#76777d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-container-high": "#dee8ff",
+              "surface-dim": "#cfdaf2",
+              "secondary-fixed-dim": "#b9c7df",
+              "surface-tint": "#0053db",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary-fixed": "#00174b",
+              "inverse-primary": "#b4c5ff",
+              "on-secondary-fixed": "#0d1c2e",
+              "surface-bright": "#f9f9ff",
+              "on-secondary-fixed-variant": "#3a485b",
+              "inverse-on-surface": "#ecf1ff",
+              "surface": "#f9f9ff",
+              "secondary": "#515f74",
+              "surface-container-low": "#f0f3ff",
+              "secondary-container": "#d5e3fc",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#d8e3fb",
+              "primary": "#000000",
+              "secondary-fixed": "#d5e3fc",
+              "outline-variant": "#c6c6cd",
+              "surface-container": "#e7eeff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-surface": "#111c2d",
+              "tertiary-container": "#2a1700",
+              "on-tertiary-fixed": "#2a1700",
+              "primary-container": "#00174b",
+              "on-primary-container": "#497cff",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-background": "#111c2d",
+              "on-tertiary-container": "#b87500",
+              "error-container": "#ffdad6",
+              "background": "#f9f9ff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#dbe1ff",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-[#f9f9ff] dark:bg-[#111c2d] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Member Profile Photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOmvTrPGOMvQiLQ6PsDeg4FlD_cYqYWPiaIzMbNqoHUwLRhxWjTwMtbt0-PKxhGz3Af4mHtVIFuX5shluyQiWYZeaWgs6gM3fAjkRYQgOrdvSXzga4ndYhzf6PuBvlqJNv2vWqlfc2yG_ULUk3afonx8wzldPoJJUDfx0yk_y0qlr2x-fi-Y8jz4y3YObeW2s3caZE5KibAqxX7DxOlf65yya1ZLJ5z53dLtCaHclN2ApiYlPOfUlKA4luE3dfGz8nSj6flmuu095F"/>
+</div>
+<span class="font-['Inter'] font-bold tracking-[-0.02em] text-lg text-[#000000] dark:text-white uppercase">IRON LEDGER</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#45464d] dark:text-[#c6c6cd] hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="mt-20 px-6 max-w-2xl mx-auto">
+<!-- Header Section -->
+<section class="mb-10">
+<div class="flex flex-col gap-2">
+<div class="inline-flex items-center self-start px-3 py-1 bg-surface-container-high rounded-full">
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.05em] text-on-surface-variant">SOLO LECTURA</span>
+</div>
+<h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-background">Rutina de Hipertrofia</h1>
+<p class="text-on-surface-variant text-sm font-medium">Semana 4 • Enfoque en volumen muscular</p>
+</div>
+</section>
+<!-- Capacity / Progress Meter (Design System Element) -->
+<div class="mb-10 p-6 bg-surface-container-lowest rounded-xl shadow-[0_20px_40px_rgba(17,28,45,0.04)]">
+<div class="flex justify-between items-end mb-4">
+<div>
+<span class="block font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">INTENSIDAD GENERAL</span>
+<span class="text-2xl font-black text-on-background">ALTA <span class="text-surface-tint">8/10</span></span>
+</div>
+<div class="text-right">
+<span class="block font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">DURACIÓN</span>
+<span class="text-lg font-bold text-on-background">75 MIN</span>
+</div>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-surface-tint to-on-tertiary-container w-[80%] rounded-full"></div>
+</div>
+</div>
+<!-- Exercise List (Accordion Style) -->
+<div class="space-y-4">
+<span class="font-label text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant ml-1">EJERCICIOS DEL DÍA</span>
+<!-- Exercise Card 1 (Expanded State Simulation) -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(17,28,45,0.02)] overflow-hidden" open="">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none active:scale-[0.98] transition-transform duration-200">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline font-bold text-lg text-on-background">Press de Banca</h3>
+<p class="font-label text-[11px] font-bold uppercase tracking-wider text-surface-tint">4 Series x 12 Reps</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-2 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">TIEMPO DE DESCANSO</span>
+<span class="font-headline font-extrabold text-xl">90s</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">RPE OBJETIVO</span>
+<span class="font-headline font-extrabold text-xl">8.5</span>
+</div>
+</div>
+<div class="space-y-3">
+<span class="block font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">INSTRUCCIONES</span>
+<p class="text-on-surface leading-relaxed text-sm">Controlar el descenso en 3 segundos y mantener la espalda apoyada. Evitar el rebote en el pecho y asegurar un bloqueo completo arriba.</p>
+</div>
+</div>
+</details>
+<!-- Exercise Card 2 -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(17,28,45,0.02)] overflow-hidden">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none active:scale-[0.98] transition-transform duration-200">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline font-bold text-lg text-on-background">Aperturas con Mancuernas</h3>
+<p class="font-label text-[11px] font-bold uppercase tracking-wider text-surface-tint">3 Series x 15 Reps</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-2 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">TIEMPO DE DESCANSO</span>
+<span class="font-headline font-extrabold text-xl">60s</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">RPE OBJETIVO</span>
+<span class="font-headline font-extrabold text-xl">9.0</span>
+</div>
+</div>
+<div class="space-y-3">
+<span class="block font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">INSTRUCCIONES</span>
+<p class="text-on-surface leading-relaxed text-sm">Mantener una ligera flexión en los codos. Sentir el estiramiento máximo en la parte inferior del movimiento sin forzar la articulación del hombro.</p>
+</div>
+</div>
+</details>
+<!-- Exercise Card 3 -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(17,28,45,0.02)] overflow-hidden">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none active:scale-[0.98] transition-transform duration-200">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline font-bold text-lg text-on-background">Press Militar (Barra)</h3>
+<p class="font-label text-[11px] font-bold uppercase tracking-wider text-surface-tint">4 Series x 10 Reps</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-2 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">TIEMPO DE DESCANSO</span>
+<span class="font-headline font-extrabold text-xl">90s</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">RPE OBJETIVO</span>
+<span class="font-headline font-extrabold text-xl">8.0</span>
+</div>
+</div>
+<div class="space-y-3">
+<span class="block font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">INSTRUCCIONES</span>
+<p class="text-on-surface leading-relaxed text-sm">Apretar el core y los glúteos para estabilizar la columna. La barra debe pasar cerca de la cara en el ascenso.</p>
+</div>
+</div>
+</details>
+<!-- Exercise Card 4 -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(17,28,45,0.02)] overflow-hidden">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none active:scale-[0.98] transition-transform duration-200">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline font-bold text-lg text-on-background">Extensiones de Tríceps</h3>
+<p class="font-label text-[11px] font-bold uppercase tracking-wider text-surface-tint">3 Series x 12 Reps</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-2 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">TIEMPO DE DESCANSO</span>
+<span class="font-headline font-extrabold text-xl">45s</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<span class="block font-label text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">RPE OBJETIVO</span>
+<span class="font-headline font-extrabold text-xl">9.5</span>
+</div>
+</div>
+<div class="space-y-3">
+<span class="block font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">INSTRUCCIONES</span>
+<p class="text-on-surface leading-relaxed text-sm">Mantener los codos pegados a los costados. Extender completamente y apretar el tríceps un segundo en la parte final.</p>
+</div>
+</div>
+</details>
+</div>
+<!-- Footnote / Editorial Detail -->
+<div class="mt-12 opacity-40 text-center">
+<span class="font-label text-[10px] font-black uppercase tracking-[0.2em]">KINETIC PRECISION FRAMEWORK</span>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-[#f9f9ff]/80 dark:bg-[#111c2d]/80 backdrop-blur-md border-t border-[#c6c6cd]/15 shadow-[0_-10px_30px_rgba(17,28,45,0.04)] rounded-t-3xl">
+<a class="flex flex-col items-center justify-center text-[#45464d] dark:text-[#c6c6cd] px-5 py-2 hover:text-[#000000] dark:hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-[0.05em] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#000000] dark:bg-[#f0f3ff] text-white dark:text-[#00174b] rounded-2xl px-5 py-2 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-[0.05em] mt-1">My Plan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#45464d] dark:text-[#c6c6cd] px-5 py-2 hover:text-[#000000] dark:hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-[0.05em] mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

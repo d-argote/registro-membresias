@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Command Center | Kinetic Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#45464d",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "surface-tint": "#0053db",
+                        "background": "#f9f9ff",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-background": "#111c2d",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "primary": "#000000",
+                        "on-surface": "#111c2d",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container": "#e7eeff",
+                        "secondary": "#515f74",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary-container": "#57657a",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-fixed": "#ffddb8",
+                        "inverse-surface": "#263143",
+                        "surface-bright": "#f9f9ff",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-primary-container": "#497cff",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary-container": "#2a1700",
+                        "on-error-container": "#93000a",
+                        "outline": "#76777d",
+                        "secondary-container": "#d5e3fc",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#000000",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#ecf1ff",
+                        "surface-variant": "#d8e3fb",
+                        "on-primary-fixed": "#00174b",
+                        "primary-container": "#00174b",
+                        "surface-dim": "#cfdaf2",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface": "#f9f9ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-xl z-50">
+<div class="flex flex-col h-full p-6 space-y-8">
+<div class="flex flex-col gap-1">
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">Kinetic Precision</span>
+<span class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant opacity-60">Performance Atelier</span>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-white font-bold bg-white dark:bg-slate-800 rounded-lg shadow-sm transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Plans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Roles</span>
+</a>
+</nav>
+<button class="bg-primary text-on-primary py-3 px-4 rounded-lg font-bold text-sm tracking-tight flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                Add Member
+            </button>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 z-40 bg-white/80 dark:bg-slate-950/50 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/50">
+<div class="flex justify-between items-center px-12 h-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-[10px] tracking-[0.15em] font-bold text-on-surface-variant w-64 placeholder:text-outline-variant" placeholder="BUSCAR CLIENTE..." type="text"/>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-70 transition-opacity">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-70 transition-opacity">settings</span>
+</div>
+<div class="flex items-center gap-3 border-l border-outline-variant/30 pl-8">
+<div class="text-right">
+<p class="text-[10px] font-bold tracking-widest text-on-surface uppercase">Admin User</p>
+<p class="text-[8px] font-medium text-outline uppercase tracking-tighter">Command Center Access</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Admin profile avatar professional portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAY4JFPjp5gr-jB9cp0IQyDbgIG6hpB1Hf6O22ON0klIp2tv9OD0mIngYKPOaZvbeSjTmsAXLkBo6wLZSFCxCpWv3iS2sshPIKDbAgaNyg1PPLjWpkeniElOxgdH58GSREZV9wwADQEasHSDX8duOz6Q0StLYEtf79ZRm-OKeBuBdmIkWC18tGYroAxQV6MuVmf7aHpJXvIJOR8NBEp3UrtbGPYpvbWT3-vgqSbPGrYwVnL4-1m1aVObZgzMFEH34F8q94HkoJIHqe"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-20 p-12 space-y-12">
+<!-- Welcome Header -->
+<header class="flex flex-col gap-2">
+<h1 class="text-4xl font-extrabold tracking-tighter text-on-background uppercase">Command Center</h1>
+<p class="text-on-surface-variant text-sm tracking-wide font-medium">Performance Metrics &amp; Operational Vitality</p>
+</header>
+<!-- KPI Row: Asymmetric Tonal Layering -->
+<section class="grid grid-cols-12 gap-6">
+<div class="col-span-4 p-8 bg-surface-container-lowest rounded-xl flex flex-col justify-between h-48 group hover:bg-primary transition-all duration-300">
+<span class="text-[10px] font-black tracking-[0.2em] text-outline group-hover:text-on-primary/60 uppercase">Ingresos del día</span>
+<div class="flex flex-col">
+<span class="text-4xl font-black tracking-tighter group-hover:text-on-primary">$12,450.00</span>
+<span class="text-[10px] font-bold text-surface-tint group-hover:text-on-primary/80 mt-1">+12% vs ayer</span>
+</div>
+</div>
+<div class="col-span-4 p-8 bg-surface-container-low rounded-xl flex flex-col justify-between h-48 border border-transparent hover:border-outline-variant transition-all">
+<span class="text-[10px] font-black tracking-[0.2em] text-outline uppercase">Accesos de hoy</span>
+<div class="flex flex-col">
+<span class="text-4xl font-black tracking-tighter">142</span>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-4 overflow-hidden">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant mt-2">Capacidad del recinto: 65%</span>
+</div>
+</div>
+<div class="col-span-4 p-8 bg-surface-container-highest rounded-xl flex flex-col justify-between h-48">
+<span class="text-[10px] font-black tracking-[0.2em] text-on-primary-fixed-variant uppercase">Total Clientes Activos</span>
+<div class="flex flex-col">
+<span class="text-4xl font-black tracking-tighter text-on-primary-fixed">1,284</span>
+<span class="text-[10px] font-bold text-on-surface-variant opacity-60 mt-1">Suscripciones premium activas</span>
+</div>
+</div>
+</section>
+<!-- Critical Alerts Section (Full Width, Highlighted) -->
+<section class="bg-tertiary-fixed p-8 rounded-xl shadow-sm space-y-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-3xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h2 class="text-xl font-black tracking-tighter uppercase text-on-tertiary-fixed">Alerta: Membresías por Vencer (Próximos 3 días)</h2>
+</div>
+<span class="px-3 py-1 bg-on-tertiary-fixed text-tertiary-fixed text-[10px] font-black rounded-full tracking-widest uppercase">Urgente</span>
+</div>
+<!-- Table or Empty State -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-y-2">
+<thead>
+<tr class="text-[10px] font-black uppercase tracking-[0.15em] text-on-tertiary-fixed/60">
+<th class="px-4 pb-4">Cliente</th>
+<th class="px-4 pb-4">Fecha Fin</th>
+<th class="px-4 pb-4">Días Restantes</th>
+<th class="px-4 pb-4 text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="space-y-4">
+<tr class="bg-white/40 backdrop-blur-sm rounded-lg overflow-hidden group hover:bg-white/60 transition-all">
+<td class="px-4 py-5 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-fixed/10 flex items-center justify-center font-bold text-xs">AM</div>
+<span class="text-sm font-bold tracking-tight text-on-tertiary-fixed">Alejandro Moreno</span>
+</td>
+<td class="px-4 py-5 text-sm font-medium text-on-tertiary-fixed">24 Oct 2023</td>
+<td class="px-4 py-5">
+<span class="px-3 py-1 bg-error-container text-on-error-container text-[10px] font-black rounded-full uppercase">1 Día</span>
+</td>
+<td class="px-4 py-5 text-right">
+<button class="text-[10px] font-black uppercase tracking-widest bg-on-tertiary-fixed text-white px-6 py-2 rounded shadow-lg hover:opacity-90 transition-all active:scale-95">
+                                    Enviar Recordatorio Email
+                                </button>
+</td>
+</tr>
+<tr class="bg-white/40 backdrop-blur-sm rounded-lg overflow-hidden group hover:bg-white/60 transition-all">
+<td class="px-4 py-5 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-fixed/10 flex items-center justify-center font-bold text-xs">SV</div>
+<span class="text-sm font-bold tracking-tight text-on-tertiary-fixed">Sofía Valencia</span>
+</td>
+<td class="px-4 py-5 text-sm font-medium text-on-tertiary-fixed">25 Oct 2023</td>
+<td class="px-4 py-5">
+<span class="px-3 py-1 bg-on-tertiary-fixed/10 text-on-tertiary-fixed text-[10px] font-black rounded-full uppercase">2 Días</span>
+</td>
+<td class="px-4 py-5 text-right">
+<button class="text-[10px] font-black uppercase tracking-widest bg-on-tertiary-fixed text-white px-6 py-2 rounded shadow-lg hover:opacity-90 transition-all active:scale-95">
+                                    Enviar Recordatorio Email
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Empty State Hidden by default, but styled here -->
+<div class="hidden flex flex-col items-center justify-center py-20 text-on-tertiary-fixed/40">
+<span class="material-symbols-outlined text-6xl mb-4">check_circle</span>
+<p class="text-sm font-bold tracking-widest uppercase italic">No hay membresías próximas a vencer</p>
+</div>
+</div>
+</section>
+<!-- Revenue Chart Section: High-End Magazine Layout -->
+<section class="grid grid-cols-12 gap-8">
+<div class="col-span-8 bg-surface-container-lowest p-10 rounded-xl relative overflow-hidden">
+<div class="flex justify-between items-start mb-12">
+<div>
+<h3 class="text-2xl font-black tracking-tighter uppercase mb-1">Weekly Income</h3>
+<p class="text-[10px] font-bold text-outline uppercase tracking-[0.2em]">Flux Performance Analysis</p>
+</div>
+<div class="flex gap-2">
+<span class="text-[10px] font-black text-on-surface bg-surface-container-high px-3 py-1 rounded">ESTA SEMANA</span>
+<span class="text-[10px] font-bold text-outline px-3 py-1 rounded">PASADA</span>
+</div>
+</div>
+<!-- Simple Line Graph Visual (SVG Representation) -->
+<div class="w-full h-64 relative mt-8">
+<svg class="w-full h-full" viewbox="0 0 800 200">
+<!-- Horizontal Grid Lines -->
+<line stroke="#f0f3ff" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#f0f3ff" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#f0f3ff" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<!-- Area Gradient -->
+<defs>
+<lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0053db" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#0053db" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,180 L50,160 L150,120 L250,140 L350,80 L450,90 L550,40 L650,60 L800,30 L800,200 L0,200 Z" fill="url(#chartGradient)"></path>
+<!-- Main Path -->
+<path d="M0,180 L50,160 L150,120 L250,140 L350,80 L450,90 L550,40 L650,60 L800,30" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<!-- Interactive Points -->
+<circle cx="550" cy="40" fill="#000000" r="6"></circle>
+<circle cx="550" cy="40" fill="#000000" fill-opacity="0.1" r="12"></circle>
+</svg>
+<div class="flex justify-between mt-6 text-[10px] font-bold text-outline uppercase tracking-widest">
+<span>LUN</span><span>MAR</span><span>MIE</span><span>JUE</span><span>VIE</span><span>SAB</span><span>DOM</span>
+</div>
+</div>
+</div>
+<div class="col-span-4 flex flex-col gap-6">
+<div class="flex-1 bg-surface-container-low p-8 rounded-xl flex flex-col justify-center gap-4">
+<span class="text-[10px] font-black tracking-[0.2em] text-outline uppercase">Projection</span>
+<h4 class="text-3xl font-black tracking-tighter">Est. Month-End<br/>$450,000</h4>
+<p class="text-[10px] font-medium text-on-surface-variant leading-relaxed">Based on current retention trends and historical sign-up data for the quarter.</p>
+</div>
+<div class="h-1/3 bg-on-background p-8 rounded-xl flex items-center justify-between text-white group cursor-pointer hover:bg-surface-tint transition-all">
+<div>
+<p class="text-[10px] font-black tracking-widest uppercase opacity-60">Generate</p>
+<h4 class="text-lg font-black tracking-tight uppercase">Full Audit PDF</h4>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action for Mobile (Hidden by SideNav logic but included for layout consistency) -->
+<div class="md:hidden fixed bottom-6 right-6 z-50">
+<button class="bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</body></html>

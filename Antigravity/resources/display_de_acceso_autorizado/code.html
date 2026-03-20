@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acceso Autorizado - The Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#000000",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#d5e3fc",
+              "surface-tint": "#0053db",
+              "on-secondary": "#ffffff",
+              "on-surface-variant": "#45464d",
+              "primary-container": "#00174b",
+              "background": "#f9f9ff",
+              "tertiary": "#000000",
+              "surface-dim": "#cfdaf2",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error": "#ffffff",
+              "on-primary-fixed": "#00174b",
+              "surface-container": "#e7eeff",
+              "secondary": "#515f74",
+              "surface-container-high": "#dee8ff",
+              "on-secondary-fixed-variant": "#3a485b",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f0f3ff",
+              "secondary-fixed-dim": "#b9c7df",
+              "on-secondary-container": "#57657a",
+              "inverse-primary": "#b4c5ff",
+              "surface-bright": "#f9f9ff",
+              "on-tertiary-container": "#b87500",
+              "on-background": "#111c2d",
+              "surface-variant": "#d8e3fb",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-tertiary-fixed": "#2a1700",
+              "outline-variant": "#c6c6cd",
+              "primary-fixed": "#dbe1ff",
+              "on-secondary-fixed": "#0d1c2e",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6",
+              "on-primary-fixed-variant": "#003ea8",
+              "surface-container-highest": "#d8e3fb",
+              "outline": "#76777d",
+              "on-surface": "#111c2d",
+              "secondary-container": "#d5e3fc",
+              "inverse-surface": "#263143",
+              "tertiary-fixed": "#ffddb8",
+              "tertiary-container": "#2a1700",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#497cff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-on-surface": "#ecf1ff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+        }
+        /* Kinetic Precision Highlight for Access Screen */
+        .access-bg {
+            background-color: #22C55E; /* Bright Success Green as requested */
+        }
+        .text-shadow-kinetic {
+            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="access-bg min-h-screen flex flex-col items-center justify-center text-white antialiased">
+<!-- Success Feedback Canvas -->
+<main class="w-full h-screen flex flex-col items-center justify-center px-12 text-center">
+<!-- Large Iconic Anchor -->
+<div class="mb-12 flex items-center justify-center">
+<div class="bg-white/20 backdrop-blur-sm rounded-full p-12 inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[12rem] md:text-[20rem] text-white leading-none" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">
+                    check_circle
+                </span>
+</div>
+</div>
+<!-- High-Impact Editorial Typography -->
+<div class="max-w-7xl mx-auto space-y-6">
+<p class="label-md uppercase tracking-[0.2em] font-bold text-white/80 opacity-90">
+                ACCESO AUTORIZADO
+            </p>
+<h1 class="text-6xl md:text-9xl font-black tracking-tighter leading-none text-shadow-kinetic">
+                BIENVENIDO,<br/>
+                CARLOS RODRÍGUEZ
+            </h1>
+<div class="pt-8">
+<h2 class="text-3xl md:text-5xl font-medium tracking-tight opacity-90 text-white/90">
+                    PASE ADELANTE
+                </h2>
+</div>
+</div>
+<!-- Performance Branding Anchor (Subtle) -->
+<div class="absolute bottom-12 left-0 right-0 flex flex-col items-center">
+<div class="h-1 w-32 bg-white/30 rounded-full mb-6"></div>
+<p class="text-white/60 font-black tracking-widest text-sm uppercase">
+                The Atelier Precision
+            </p>
+</div>
+</main>
+<!-- Abstract Kinetic Overlay for Depth -->
+<div class="fixed inset-0 pointer-events-none opacity-10">
+<svg height="100%" preserveaspectratio="none" viewbox="0 0 100 100" width="100%">
+<defs>
+<lineargradient id="grad1" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:white;stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:white;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<polygon fill="url(#grad1)" points="0,0 100,0 100,20 0,50"></polygon>
+<polygon fill="url(#grad1)" points="100,100 0,100 0,80 100,50"></polygon>
+</svg>
+</div>
+</body></html>

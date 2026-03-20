@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acceso Atelier - Espera Huella</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#000000",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#d5e3fc",
+              "surface-tint": "#0053db",
+              "on-secondary": "#ffffff",
+              "on-surface-variant": "#45464d",
+              "primary-container": "#00174b",
+              "background": "#f9f9ff",
+              "tertiary": "#000000",
+              "surface-dim": "#cfdaf2",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error": "#ffffff",
+              "on-primary-fixed": "#00174b",
+              "surface-container": "#e7eeff",
+              "secondary": "#515f74",
+              "surface-container-high": "#dee8ff",
+              "on-secondary-fixed-variant": "#3a485b",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f0f3ff",
+              "secondary-fixed-dim": "#b9c7df",
+              "on-secondary-container": "#57657a",
+              "inverse-primary": "#b4c5ff",
+              "surface-bright": "#f9f9ff",
+              "on-tertiary-container": "#b87500",
+              "on-background": "#111c2d",
+              "surface-variant": "#d8e3fb",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-tertiary-fixed": "#2a1700",
+              "outline-variant": "#c6c6cd",
+              "primary-fixed": "#dbe1ff",
+              "on-secondary-fixed": "#0d1c2e",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6",
+              "on-primary-fixed-variant": "#003ea8",
+              "surface-container-highest": "#d8e3fb",
+              "outline": "#76777d",
+              "on-surface": "#111c2d",
+              "secondary-container": "#d5e3fc",
+              "inverse-surface": "#263143",
+              "tertiary-fixed": "#ffddb8",
+              "tertiary-container": "#2a1700",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#497cff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-on-surface": "#ecf1ff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;
+        }
+        
+        @keyframes custom-pulse {
+            0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0px rgba(0, 83, 219, 0)); }
+            50% { transform: scale(1.05); opacity: 0.8; filter: drop-shadow(0 0 30px rgba(0, 83, 219, 0.4)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0px rgba(0, 83, 219, 0)); }
+        }
+        
+        .animate-scan-pulse {
+            animation: custom-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Scan line effect */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to bottom, transparent, #0053db, transparent);
+            top: 0;
+            z-index: 10;
+            animation: scanning 3s linear infinite;
+        }
+
+        @keyframes scanning {
+            0% { top: 15%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 85%; opacity: 0; }
+        }
+
+        .kinetic-bg {
+            background-color: #0F172A; /* Corporate Dark from prompt */
+            background-image: radial-gradient(circle at center, #1e293b 0%, #0F172A 100%);
+        }
+    </style>
+</head>
+<body class="kinetic-bg h-screen w-screen overflow-hidden flex flex-col items-center justify-center font-body selection:bg-surface-tint selection:text-white">
+<!-- Brand Anchor: Fixed Top Visual -->
+<div class="fixed top-12 left-0 w-full flex flex-col items-center">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-2 h-2 rounded-full bg-surface-tint shadow-[0_0_10px_#0053db]"></div>
+<span class="text-slate-400 font-label tracking-[0.3em] text-xs uppercase">Sistema de Gestión Atelier</span>
+</div>
+<div class="h-[1px] w-12 bg-slate-700/50"></div>
+</div>
+<!-- Main Command Center (Central Interaction Area) -->
+<main class="flex flex-col items-center justify-center space-y-16 max-w-5xl px-8 text-center">
+<!-- Giant Interactive Icon Container -->
+<div class="relative group">
+<!-- Background Layering for Depth -->
+<div class="absolute inset-0 bg-surface-tint/5 rounded-full blur-3xl scale-150"></div>
+<!-- Icon Shell -->
+<div class="relative z-20 flex items-center justify-center h-80 w-80 rounded-full border border-slate-800/50 bg-slate-900/30 backdrop-blur-sm">
+<div class="scan-line"></div>
+<!-- Central Fingerprint Icon -->
+<span class="material-symbols-outlined text-[12rem] text-on-primary animate-scan-pulse" data-icon="fingerprint" style="font-variation-settings: 'wght' 100;">
+                    fingerprint
+                </span>
+</div>
+<!-- Tonal Ring Decoration -->
+<div class="absolute -inset-4 border border-surface-tint/20 rounded-full animate-[spin_10s_linear_infinite]"></div>
+<div class="absolute -inset-8 border border-slate-800/30 rounded-full"></div>
+</div>
+<!-- Massive Instructional Text -->
+<div class="flex flex-col gap-6 items-center">
+<h1 class="text-on-primary text-6xl md:text-8xl font-black tracking-tighter leading-none max-w-4xl">
+                POR FAVOR,<br/>
+                PRESENTE SU HUELLA
+            </h1>
+<div class="flex items-center gap-8 mt-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-surface-tint text-2xl" data-icon="sensors">sensors</span>
+<span class="text-slate-400 font-label tracking-widest text-sm uppercase">Sensor Activo</span>
+</div>
+<div class="h-4 w-[1px] bg-slate-800"></div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 text-2xl" data-icon="verified_user">verified_user</span>
+<span class="text-slate-400 font-label tracking-widest text-sm uppercase">Acceso Seguro</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Status Bar -->
+<footer class="fixed bottom-12 left-0 w-full px-12 flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-slate-600 font-label text-[10px] tracking-widest uppercase mb-1">Terminal ID</span>
+<span class="text-slate-400 font-mono text-sm tracking-tighter">ATELIER-TK-0042</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-slate-600 font-label text-[10px] tracking-widest uppercase mb-1">Estado de Red</span>
+<div class="flex items-center gap-2">
+<span class="text-on-primary font-bold text-sm tracking-tighter">SINCRONIZADO</span>
+<div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
+</div>
+</div>
+</footer>
+<!-- Side Decoration (Asymmetric breathing room as per design system) -->
+<div class="fixed left-0 top-0 h-full w-2 bg-gradient-to-b from-transparent via-surface-tint/20 to-transparent"></div>
+<div class="fixed right-10 top-1/2 -translate-y-1/2 flex flex-col gap-4 opacity-20">
+<div class="h-1 w-1 rounded-full bg-white"></div>
+<div class="h-1 w-1 rounded-full bg-white"></div>
+<div class="h-1 w-1 rounded-full bg-white"></div>
+</div>
+</body></html>

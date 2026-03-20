@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f9f9ff",
+              "surface-container-low": "#f0f3ff",
+              "secondary": "#515f74",
+              "surface-bright": "#f9f9ff",
+              "on-secondary-fixed-variant": "#3a485b",
+              "inverse-on-surface": "#ecf1ff",
+              "outline-variant": "#c6c6cd",
+              "secondary-fixed": "#d5e3fc",
+              "surface-container": "#e7eeff",
+              "secondary-container": "#d5e3fc",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#d8e3fb",
+              "primary": "#000000",
+              "surface-container-high": "#dee8ff",
+              "outline": "#76777d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed-dim": "#b9c7df",
+              "surface-dim": "#cfdaf2",
+              "on-secondary-container": "#57657a",
+              "surface-variant": "#d8e3fb",
+              "inverse-surface": "#263143",
+              "on-secondary-fixed": "#0d1c2e",
+              "surface-tint": "#0053db",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary-fixed": "#00174b",
+              "inverse-primary": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "background": "#f9f9ff",
+              "on-tertiary-container": "#b87500",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "primary-fixed": "#dbe1ff",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#111c2d",
+              "tertiary-container": "#2a1700",
+              "on-tertiary-fixed": "#2a1700",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-background": "#111c2d",
+              "primary-container": "#00174b",
+              "on-primary-container": "#497cff",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none flex justify-between items-center px-8 h-16 w-full font-inter tracking-tight">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">Performance Atelier</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 duration-200 ease-in-out" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 duration-200 ease-in-out" href="#">Support</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors">settings</button>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full object-cover ml-2" data-alt="Close up of a professional male administrator profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkhMOO4svTg1Rwk2wrb2uiS4BMGEQaMeBUYjwqs7Ox7s2XfBDWN5tDWIsv2HtwYuvMggk3Je6AbbC3rC9KqP8r8CmtRN9Lkw_FTVR0GKWZUUAvih4RTCN8Jewccl_TrjKuz-3njFO03xJ51F86XpV8Oh1DS9AgYdo6jkXTp9KqZ7I4RlLwWXBTozEuoyYc25gtLBnChlFyjHw-iHU-Bf2xBA3eVwD1N5dQ7eaZU9Vb5YPnNxbnRmHYfA5um8xxdpkVHs2o3SBJToxh"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 gap-y-2 font-inter text-sm font-medium">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+</div>
+<div>
+<h1 class="text-lg font-black tracking-tighter text-blue-700 dark:text-blue-500 leading-none">Kinetic Precision</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Elite Management</p>
+</div>
+</div>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:translate-x-1 transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+        </a>
+<a class="flex items-center gap-3 p-3 bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm rounded-lg hover:translate-x-1 transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span> Customers
+        </a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:translate-x-1 transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span> Reports
+        </a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:translate-x-1 transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span> Plans
+        </a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:translate-x-1 transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span> Roles
+        </a>
+<div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-y-1">
+<button class="w-full bg-primary text-on-primary py-3 rounded hover:opacity-90 transition-opacity mb-4 font-bold text-xs uppercase tracking-widest">Add New Member</button>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+            </a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span> Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-12 bg-surface min-h-screen">
+<!-- Header Section -->
+<header class="mb-12">
+<div class="flex items-center gap-4 text-on-surface-variant mb-2">
+<span class="label-md uppercase tracking-widest text-[10px] font-bold">Management</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="label-md uppercase tracking-widest text-[10px] font-bold">Customers</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="label-md uppercase tracking-widest text-[10px] font-bold text-primary">Carlos Rodríguez</span>
+</div>
+<h2 class="text-4xl font-extrabold tracking-tighter text-on-background">Customer Profile</h2>
+</header>
+<div class="grid grid-cols-12 gap-10">
+<!-- Left Column: Profile -->
+<div class="col-span-4 flex flex-col gap-8">
+<div class="bg-surface-container-lowest p-10 rounded-xl flex flex-col items-center text-center shadow-sm">
+<div class="relative mb-6">
+<img alt="Carlos Rodríguez Profile" class="w-32 h-32 rounded-full object-cover ring-4 ring-surface-container" data-alt="Portrait of a male gym member Carlos Rodríguez" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0obQZKWhxeh7z-Eh0sjZcCEBmuYxWGUdR0ETTO_2EDuaxBaZ9paRUlPteENTY6QwU12uLP2pLxFhxnrKPU0XuM__DE6quVx_OFn41X_Jb4PNsT4KTTKHVcKUGX1rAHivWfNDBb5n1VyQ9QyyN8-SqJ3dqtYUwo5Vk4dbtpoCLr1LyHGRaASA93TjGAIPKweLV7oUZGyl3RSkha-Y7GMwJDjzZEwZ3SkMWm7n8SbQuGw95AP3ITZ6Fdri6jn4uqpEBaPpfgbdte_BK"/>
+<div class="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-surface-container-lowest rounded-full"></div>
+</div>
+<h3 class="text-2xl font-black tracking-tight text-on-surface mb-1">Carlos Rodríguez</h3>
+<p class="text-on-surface-variant font-mono text-sm tracking-tighter mb-1">KINETIC-8822</p>
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-6">ID: 102030405</p>
+<span class="px-6 py-2 rounded-full bg-green-100 text-green-700 text-xs font-black uppercase tracking-widest border border-green-200">
+                        Activa
+                    </span>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col gap-6">
+<h4 class="label-md uppercase tracking-widest text-[11px] font-black text-on-surface-variant">Membership Timeline</h4>
+<div class="space-y-6">
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Inicio</p>
+<p class="font-bold text-on-surface">2024-01-01</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">calendar_today</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Fin</p>
+<p class="font-bold text-on-surface">2025-01-01</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">event_busy</span>
+</div>
+<div class="flex justify-between items-center pt-2">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Días Restantes</p>
+<p class="text-5xl font-black tracking-tighter text-surface-tint">120</p>
+</div>
+<div class="w-16 h-16 rounded-full border-4 border-surface-container-highest flex items-center justify-center">
+<span class="text-[10px] font-black">32%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Action Tabs -->
+<div class="col-span-8 flex flex-col gap-6">
+<!-- Tab Headers -->
+<div class="flex gap-1 bg-surface-container-low p-1 rounded-lg w-max">
+<button class="px-6 py-2.5 rounded-md bg-surface-container-lowest shadow-sm text-xs font-black uppercase tracking-wider text-primary">Registrar Pago</button>
+<button class="px-6 py-2.5 rounded-md text-xs font-black uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">Membresía</button>
+<button class="px-6 py-2.5 rounded-md text-xs font-black uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">Historial</button>
+</div>
+<!-- Tab 1: Registrar Pago -->
+<div class="bg-surface-container-lowest p-10 rounded-xl shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+<h4 class="text-xl font-bold tracking-tight">Nuevo Registro de Pago</h4>
+</div>
+<form class="space-y-8">
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-2">
+<label class="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Tipo de Plan</label>
+<select class="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm">
+<option>Mensual</option>
+<option>Anual</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Método de Pago</label>
+<select class="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm">
+<option>Efectivo</option>
+<option>Tarjeta</option>
+<option>Transferencia</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Monto (USD)</label>
+<div class="relative">
+<span class="absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 pl-6 font-bold text-2xl tracking-tighter" placeholder="0.00" type="number"/>
+</div>
+<p class="text-[11px] text-on-surface-variant/70 italic mt-2">
+<span class="material-symbols-outlined text-[14px] align-middle mr-1">info</span>
+                                La nueva vigencia se sumará al final de la actual
+                            </p>
+</div>
+<button class="mt-4 w-full bg-primary text-on-primary py-5 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-black/90 transition-all flex items-center justify-center gap-3" type="button">
+                            Registrar Pago y Generar PDF
+                            <span class="material-symbols-outlined">picture_as_pdf</span>
+</button>
+</form>
+</div>
+<!-- Tab 2: Control de Membresía (Miniaturized for Preview) -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h4 class="label-md uppercase tracking-widest text-[11px] font-black text-on-surface-variant mb-6">Control Administrativo</h4>
+<div class="flex gap-4">
+<button class="flex-1 border-2 border-on-tertiary-container/20 text-on-tertiary-container py-4 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-tertiary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">ac_unit</span>
+                            Congelar Membresía
+                        </button>
+<button class="flex-1 border-2 border-surface-tint/20 text-surface-tint py-4 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">play_circle</span>
+                            Reactivar Membresía
+                        </button>
+</div>
+</div>
+<!-- Tab 3: Historial Financiero -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h4 class="text-lg font-bold tracking-tight">Historial Financiero</h4>
+<button class="text-[10px] font-black uppercase tracking-widest text-surface-tint border-b-2 border-surface-tint">Ver Todo</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/20">
+<th class="pb-4 label-md uppercase tracking-widest text-[9px] font-black text-on-surface-variant">ID Transacción</th>
+<th class="pb-4 label-md uppercase tracking-widest text-[9px] font-black text-on-surface-variant">Fecha</th>
+<th class="pb-4 label-md uppercase tracking-widest text-[9px] font-black text-on-surface-variant text-right">Monto</th>
+<th class="pb-4 label-md uppercase tracking-widest text-[9px] font-black text-on-surface-variant text-center">Método</th>
+<th class="pb-4 label-md uppercase tracking-widest text-[9px] font-black text-on-surface-variant text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr>
+<td class="py-4 font-mono text-xs text-on-surface-variant">TX-99021</td>
+<td class="py-4 text-xs font-semibold">2023-12-15</td>
+<td class="py-4 text-right font-black text-sm">$450.00</td>
+<td class="py-4 text-center">
+<span class="px-2 py-1 bg-surface-container text-on-secondary-container text-[9px] font-bold rounded uppercase tracking-tighter">Tarjeta</span>
+</td>
+<td class="py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="material-symbols-outlined text-[18px] text-surface-tint hover:scale-110 transition-transform">download</button>
+<button class="material-symbols-outlined text-[18px] text-error hover:scale-110 transition-transform">cancel</button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="py-4 font-mono text-xs text-on-surface-variant">TX-88122</td>
+<td class="py-4 text-xs font-semibold">2023-11-12</td>
+<td class="py-4 text-right font-black text-sm">$45.00</td>
+<td class="py-4 text-center">
+<span class="px-2 py-1 bg-surface-container text-on-secondary-container text-[9px] font-bold rounded uppercase tracking-tighter">Efectivo</span>
+</td>
+<td class="py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="material-symbols-outlined text-[18px] text-surface-tint">download</button>
+<button class="material-symbols-outlined text-[18px] text-error">cancel</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB Suppression (Hiding FAB as per rules for Detail/Settings screens) -->
+</body></html>

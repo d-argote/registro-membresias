@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Precision - New Client Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#d8e3fb",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "background": "#f9f9ff",
+                        "outline": "#76777d",
+                        "surface-dim": "#cfdaf2",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#dee8ff",
+                        "on-background": "#111c2d",
+                        "surface": "#f9f9ff",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#b87500",
+                        "surface-tint": "#0053db",
+                        "secondary": "#515f74",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f0f3ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#57657a",
+                        "error-container": "#ffdad6",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-container": "#00174b",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "surface-bright": "#f9f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-primary": "#b4c5ff",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-surface": "#111c2d",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "tertiary": "#000000",
+                        "surface-container": "#e7eeff",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary-fixed": "#2a1700",
+                        "tertiary-container": "#2a1700",
+                        "on-primary-container": "#497cff",
+                        "secondary-container": "#d5e3fc",
+                        "on-surface-variant": "#45464d",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "on-primary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-xl z-50">
+<div class="flex flex-col h-full p-6 space-y-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+</div>
+<div>
+<h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">Kinetic Precision</h1>
+<p class="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase opacity-70">Performance Atelier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-white font-bold bg-white dark:bg-slate-800 rounded-lg shadow-sm transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Plans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-sans antialiased tracking-tight text-sm font-medium">Roles</span>
+</a>
+</nav>
+<button class="bg-primary text-on-primary py-4 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-lg shadow-primary/10">
+                Add Member
+            </button>
+</div>
+</aside>
+<!-- TopNavBar Anchor -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 z-40 bg-white/80 dark:bg-slate-950/50 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/50">
+<div class="flex justify-between items-center px-12 h-full">
+<div class="flex items-center gap-8">
+<span class="font-sans text-sm font-semibold tracking-wide uppercase text-slate-900">Command Center</span>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-surface-tint/20 transition-all" placeholder="Quick search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<button class="text-slate-400 hover:text-slate-600 transition-opacity duration-150 hover:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-400 hover:text-slate-600 transition-opacity duration-150 hover:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm">
+<img alt="Admin User Avatar" class="w-full h-full object-cover" data-alt="Portrait of a professional male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn-0_Z9wxA8kV_vqRrEosnZvmxDuX4BEnXTedc3hzCsmLd6s9tW0s_8f8C4Dfyh-0UhV5C8f0B3-Pl--5PCF2synUMF5bbYlxYgo65Juk-w0LV8qKyjPLd0c1xtj6FX8ycHVvCnZyglWjpWSfXz_Sf4hXoHPJM8vpW8y-HKYMFvE_9u40JqzFSq9OVaEQrGKMZzn6Kl1SjrWHI8q8TtmPKrewVZja1luK-P4JZpyXfYCaOdtuyem0J6yqlqC8zqa1ATqbzdUHwFskU"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-20 min-h-screen">
+<div class="p-12 max-w-6xl mx-auto">
+<!-- Page Header -->
+<div class="mb-12">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="text-xs font-bold tracking-widest uppercase">Customers</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-xs font-bold tracking-widest uppercase text-surface-tint">Registration</span>
+</div>
+<h2 class="text-4xl font-black tracking-tight text-on-background">New Client Intake</h2>
+<p class="text-on-surface-variant mt-2 text-lg">Secure biometric enrollment and profile creation.</p>
+</div>
+<!-- Multi-Step Wizard Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_20px_40px_rgba(17,28,45,0.06)] overflow-hidden border border-outline-variant/10">
+<!-- Stepper Progress -->
+<div class="grid grid-cols-2 border-b border-outline-variant/10">
+<div class="p-6 flex items-center gap-4 border-r border-outline-variant/10 bg-surface-container-low/30">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<div>
+<p class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">Step 01</p>
+<p class="text-sm font-semibold">Personal Data</p>
+</div>
+</div>
+<div class="p-6 flex items-center gap-4 opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-bold border border-outline-variant/20">2</div>
+<div>
+<p class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">Step 02</p>
+<p class="text-sm font-semibold">Biometric Capture</p>
+</div>
+</div>
+</div>
+<!-- Form Content Area -->
+<div class="p-10">
+<!-- Section: Personal Data (Step 1) -->
+<div class="space-y-10">
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Primary Info -->
+<div class="col-span-12 md:col-span-8 space-y-6">
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-2 sm:col-span-1">
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">Full Name *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 px-0 py-2 focus:ring-0 focus:border-surface-tint transition-all placeholder:text-outline/40" placeholder="e.g. Alexander Pierce" type="text"/>
+</div>
+<div class="col-span-2 sm:col-span-1">
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">ID Number *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 px-0 py-2 focus:ring-0 focus:border-surface-tint transition-all placeholder:text-outline/40" placeholder="SSN or National ID" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-2 sm:col-span-1">
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">Phone *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 px-0 py-2 focus:ring-0 focus:border-surface-tint transition-all placeholder:text-outline/40" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="col-span-2 sm:col-span-1">
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">Email Address *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 px-0 py-2 focus:ring-0 focus:border-surface-tint transition-all placeholder:text-outline/40" placeholder="name@atelier.com" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">Residential Address *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 px-0 py-2 focus:ring-0 focus:border-surface-tint transition-all placeholder:text-outline/40" placeholder="Street name, Number, Suite, City" type="text"/>
+</div>
+</div>
+<!-- Right Column: Secondary Info -->
+<div class="col-span-12 md:col-span-4 space-y-6">
+<div>
+<label class="block text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-2">Date of Birth (Optional)</label>
+<input class="w-full bg-surface-container-low border-0 rounded-lg px-4 py-3 focus:ring-2 focus:ring-surface-tint/10 transition-all text-on-surface" type="date"/>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="text-sm font-semibold">Special Accessibility</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-surface-tint"></div>
+</label>
+</div>
+<p class="text-xs text-on-surface-variant mb-4">Does the client have a disability?</p>
+<textarea class="w-full bg-surface-container-lowest border-0 rounded-lg p-3 text-sm focus:ring-2 focus:ring-surface-tint/10 min-h-[100px] resize-none" placeholder="Description (max 500 chars)"></textarea>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="pt-10 flex justify-end">
+<button class="bg-primary text-on-primary px-12 py-4 rounded-lg font-bold flex items-center gap-3 transition-all hover:shadow-xl hover:shadow-primary/20 active:scale-95">
+                                Next
+                                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Step 2: Biometric (Hidden logic placeholder) -->
+<!-- We visualize the Biometric area below as a separate section for this UI showcase -->
+<div class="mt-20 pt-20 border-t border-outline-variant/20 opacity-30 grayscale pointer-events-none">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-bold border border-outline-variant/20">2</div>
+<h3 class="text-2xl font-black uppercase tracking-tight">Biometric Capture Preview</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Left Index - Waiting -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-dashed border-outline-variant flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 text-outline/40">
+<span class="material-symbols-outlined text-3xl">fingerprint</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Left Index</p>
+<p class="text-[10px] mt-1 text-outline">Waiting for scan</p>
+</div>
+<!-- Right Index - Capturing -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-surface-tint/30 flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-surface-tint/5 animate-pulse"></div>
+<div class="w-16 h-16 rounded-full border-4 border-surface-tint border-t-transparent flex items-center justify-center mb-4 text-surface-tint">
+<span class="text-sm font-black">74%</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-surface-tint">Right Index</p>
+<p class="text-[10px] mt-1 text-on-surface-variant font-medium">Capturing...</p>
+</div>
+<!-- Thumb - Success -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-on-tertiary-container/20 flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface">Right Thumb</p>
+<p class="text-[10px] mt-1 text-on-tertiary-container font-bold">Optimal quality (88)</p>
+</div>
+<!-- Middle - Error -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-error/30 flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-error-container text-on-error-container flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl">error_outline</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-error">Left Thumb</p>
+<p class="text-[10px] mt-1 text-error font-bold">Insufficient quality. Retry</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Information -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="p-6 rounded-xl bg-surface-container-low/50">
+<span class="material-symbols-outlined text-surface-tint mb-3">verified_user</span>
+<h4 class="text-sm font-bold uppercase tracking-tight mb-2">GDPR Compliant</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">All biometric data is encrypted via AES-256 and stored in a decentralized hardware security module.</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low/50">
+<span class="material-symbols-outlined text-surface-tint mb-3">hub</span>
+<h4 class="text-sm font-bold uppercase tracking-tight mb-2">Automated UUID</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">System will generate a unique hash-based identifier upon successful biometric verification.</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low/50">
+<span class="material-symbols-outlined text-surface-tint mb-3">devices</span>
+<h4 class="text-sm font-bold uppercase tracking-tight mb-2">Hardware Status</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Fingerprint scanner <span class="text-on-tertiary-container font-bold">ACTIVE</span>. Firmware v2.4.0 is running optimally.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Helper (Simplified for this view) -->
+<div class="fixed bottom-8 right-8">
+<div class="bg-white p-4 rounded-xl shadow-2xl flex items-center gap-4 border border-outline-variant/10">
+<div class="w-2 h-2 rounded-full bg-surface-tint animate-pulse"></div>
+<p class="text-[10px] font-black uppercase tracking-widest text-on-surface">System Live / Intake Mode</p>
+</div>
+</div>
+</body></html>
