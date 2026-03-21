@@ -4,6 +4,7 @@ import { useState } from "react";
 import { registrarPagoAction, congelarAction, reactivarAction } from "@/app/actions/membresias";
 import { actualizarCliente } from "@/app/actions/clientes";
 import { ESTADO_MEMBRESIA, TIPO_MEMBRESIA } from "@/lib/services/membresia.service";
+import { ReciboPago, type DatosRecibo } from "@/lib/models/ReciboPago";
 import { useRouter } from "next/navigation";
 
 export default function ClientProfile({ cliente, membresia, transacciones }: any) {
@@ -17,6 +18,8 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
   const [tipo, setTipo] = useState<number>(TIPO_MEMBRESIA.MENSUAL);
   const [metodo, setMetodo] = useState<number>(1);
   const [monto, setMonto] = useState<number>(0);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [reciboActual, setReciboActual] = useState<ReciboPago | null>(null);
 
   // Form states for Edit
   const [editData, setEditData] = useState({
@@ -91,13 +94,35 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
       metodo_pago_id: Number(metodo),
       monto: Number(monto)
     });
-    if (!res.success) setError(String(res.error));
-    else {
+    if (!res.success) {
+      setError(String(res.error));
+    } else if (res.reciboData) {
+      // Build ReciboPago from returned server data
+      const datos: DatosRecibo = {
+        transaccionId: res.reciboData.transaccionId,
+        monto: res.reciboData.monto,
+        fechaPago: new Date(res.reciboData.fechaPago),
+        metodoPagoId: res.reciboData.metodoPagoId,
+        clienteNombre: cliente.nombre,
+        clienteId: cliente.id,
+        clienteIdentificacion: cliente.numero_identificacion || "-",
+        tipoMembresia: res.reciboData.tipoMembresia,
+        fechaInicio: new Date(res.reciboData.fechaInicio),
+        fechaFin: new Date(res.reciboData.fechaFin),
+      };
+      const recibo = new ReciboPago(datos);
+      setReciboActual(recibo);
       setMonto(0);
-      setActiveTab("historial");
+      setPaymentSuccess(true);
       router.refresh();
     }
     setLoading(false);
+  };
+
+  const handleVolverAlPerfil = () => {
+    setPaymentSuccess(false);
+    setReciboActual(null);
+    setActiveTab("historial");
   };
 
   const handleCongelar = async () => {
@@ -322,62 +347,107 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
         {/* Tab 1: Registrar Pago */}
         {activeTab === "pago" && (
           <div className="bg-surface-container-lowest p-10 rounded-xl shadow-sm border border-outline-variant/10">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="material-symbols-outlined text-primary" style={{fontVariationSettings: "'FILL' 1"}}>payments</span>
-              <h4 className="text-xl font-bold tracking-tight">Nuevo Registro de Pago</h4>
-            </div>
-            <form onSubmit={handlePago} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-2">
-                  <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Tipo de Plan</label>
-                  <select 
-                    value={tipo}
-                    onChange={(e) => setTipo(Number(e.target.value))}
-                    className="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm"
+            {paymentSuccess && reciboActual ? (
+              /* ── SUCCESS STATE ── */
+              <div className="flex flex-col items-center text-center gap-6 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-green-600 text-5xl" style={{fontVariationSettings: "'FILL' 1"}}>check_circle</span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-2xl font-black tracking-tight text-on-background">¡Pago Registrado Exitosamente!</h4>
+                  <p className="text-sm text-on-surface-variant">El recibo está listo. Puedes descargarlo o imprimirlo ahora.</p>
+                  <p className="text-[10px] font-mono text-outline uppercase tracking-widest mt-1">Recibo N.° {reciboActual.numeroRecibo}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm pt-4">
+                  <button
+                    onClick={async () => {
+                      const { ReciboGenerador } = await import("@/lib/services/recibo.generator");
+                      await ReciboGenerador.descargar(reciboActual);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 bg-primary text-on-primary py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
                   >
-                    <option value={TIPO_MEMBRESIA.MENSUAL}>Mensual</option>
-                    <option value={TIPO_MEMBRESIA.ANUAL}>Anual</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Método de Pago</label>
-                  <select 
-                    value={metodo}
-                    onChange={(e) => setMetodo(Number(e.target.value))}
-                    className="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm"
+                    <span className="material-symbols-outlined text-lg">download</span>
+                    Descargar PDF
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const { ReciboGenerador } = await import("@/lib/services/recibo.generator");
+                      await ReciboGenerador.imprimir(reciboActual);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 bg-surface-tint text-on-primary py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-surface-tint/20"
                   >
-                    <option value={1}>Efectivo</option>
-                    <option value={2}>Tarjeta</option>
-                    <option value={3}>Transferencia</option>
-                  </select>
+                    <span className="material-symbols-outlined text-lg">print</span>
+                    Imprimir
+                  </button>
                 </div>
+                <button
+                  onClick={handleVolverAlPerfil}
+                  className="text-xs font-bold text-on-surface-variant hover:text-primary underline underline-offset-4 transition-colors"
+                >
+                  Volver al Perfil del Cliente →
+                </button>
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Monto (COP)</label>
-                <div className="relative">
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
-                  <input 
-                    type="number"
-                    value={monto || ""}
-                    onChange={(e) => setMonto(Number(e.target.value))}
-                    className="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 pl-6 font-bold text-2xl tracking-tighter" 
-                    placeholder="0"
-                  />
+            ) : (
+              /* ── PAYMENT FORM ── */
+              <>
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="material-symbols-outlined text-primary" style={{fontVariationSettings: "'FILL' 1"}}>payments</span>
+                  <h4 className="text-xl font-bold tracking-tight">Nuevo Registro de Pago</h4>
                 </div>
-                <p className="text-[11px] text-on-surface-variant/70 italic mt-2 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">info</span>
-                  La nueva vigencia se sumará al final de la actual
-                </p>
-              </div>
-              <button 
-                type="submit"
-                disabled={loading}
-                className="mt-4 w-full bg-primary text-on-primary py-5 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-black/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-              >
-                {loading ? 'Procesando...' : 'Registrar Pago y Generar PDF'}
-                <span className="material-symbols-outlined">picture_as_pdf</span>
-              </button>
-            </form>
+                <form onSubmit={handlePago} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="flex flex-col gap-2">
+                      <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Tipo de Plan</label>
+                      <select
+                        value={tipo}
+                        onChange={(e) => setTipo(Number(e.target.value))}
+                        className="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm"
+                      >
+                        <option value={TIPO_MEMBRESIA.MENSUAL}>Mensual</option>
+                        <option value={TIPO_MEMBRESIA.ANUAL}>Anual</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Método de Pago</label>
+                      <select
+                        value={metodo}
+                        onChange={(e) => setMetodo(Number(e.target.value))}
+                        className="bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 font-medium text-sm"
+                      >
+                        <option value={1}>Efectivo</option>
+                        <option value={2}>Tarjeta</option>
+                        <option value={3}>Transferencia</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="label-md uppercase tracking-widest text-[10px] font-bold text-on-surface-variant">Monto (COP)</label>
+                    <div className="relative">
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
+                      <input
+                        type="number"
+                        value={monto || ""}
+                        onChange={(e) => setMonto(Number(e.target.value))}
+                        className="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 pl-6 font-bold text-2xl tracking-tighter"
+                        placeholder="0"
+                      />
+                    </div>
+                    <p className="text-[11px] text-on-surface-variant/70 italic mt-2 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">info</span>
+                      La nueva vigencia se sumará al final de la actual
+                    </p>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="mt-4 w-full bg-primary text-on-primary py-5 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-black/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                  >
+                    {loading ? 'Procesando...' : 'Registrar Pago y Generar Recibo'}
+                    <span className="material-symbols-outlined">receipt_long</span>
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         )}
 
@@ -441,7 +511,26 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
                       </td>
                       <td className="py-4 text-right">
                         <div className="flex justify-end gap-2 text-center items-center h-full">
-                          <button className="material-symbols-outlined text-[18px] text-surface-tint hover:scale-110 transition-transform">download</button>
+                          <button
+                            title="Descargar Recibo"
+                            onClick={async () => {
+                              const recibo = new ReciboPago({
+                                transaccionId: tx.id,
+                                monto: tx.monto,
+                                fechaPago: new Date(tx.fecha_pago || tx.created_at),
+                                metodoPagoId: tx.metodo_pago_id,
+                                clienteNombre: cliente.nombre,
+                                clienteId: cliente.id,
+                                clienteIdentificacion: cliente.numero_identificacion || "-",
+                                tipoMembresia: "Membresía",
+                                fechaInicio: membresia?.fecha_inicio ? new Date(membresia.fecha_inicio + "T00:00:00") : new Date(),
+                                fechaFin: membresia?.fecha_fin ? new Date(membresia.fecha_fin + "T00:00:00") : new Date(),
+                              });
+                              const { ReciboGenerador } = await import("@/lib/services/recibo.generator");
+                              await ReciboGenerador.descargar(recibo);
+                            }}
+                            className="material-symbols-outlined text-[18px] text-surface-tint hover:scale-110 transition-transform"
+                          >download</button>
                           <button className="material-symbols-outlined text-[18px] text-error hover:scale-110 transition-transform">cancel</button>
                         </div>
                       </td>

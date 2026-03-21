@@ -80,10 +80,6 @@ export class TransaccionPago {
     return this.monto;
   }
 
-  public generarRecibo(): string {
-    return `Recibo #${this.numeroRecibo || this.id} - Monto: ${this.monto} - Pagado el: ${this.fechaPago.toLocaleDateString()}`;
-  }
-
   public isAnulada(): boolean {
     return this.anulada;
   }

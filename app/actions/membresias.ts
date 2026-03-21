@@ -23,8 +23,21 @@ export async function registrarPagoAction(data: {
     const tx = new TransaccionPago(null, resultId, data.monto, new Date(), 0, false, null, null, data.metodo_pago_id);
     await tx.registrar();
 
+    const tipoLabel = data.tipo_membresia_id === 2 ? "Anual" : "Mensual";
+
     revalidatePath(`/dashboard/clientes/${data.cliente_id}`);
-    return { success: true, result: { membresia_id: resultId } };
+    return {
+      success: true,
+      reciboData: {
+        transaccionId: tx.id as string,
+        monto: data.monto,
+        fechaPago: new Date().toISOString(),
+        metodoPagoId: data.metodo_pago_id,
+        tipoMembresia: tipoLabel,
+        fechaInicio: mem.getFechaInicio().toISOString(),
+        fechaFin: mem.getFechaFin().toISOString(),
+      },
+    };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
