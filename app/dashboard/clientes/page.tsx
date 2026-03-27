@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ClientRow from "./ClientRow";
 
 export const revalidate = 0;
 
@@ -64,25 +65,13 @@ export default async function ClientesListPage() {
               </thead>
               <tbody>
                 {clientes.map((cli) => (
-                  <tr key={cli.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors">
-                    <td className="py-4 px-6 font-semibold text-neutral-800 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-bold text-neutral-500 uppercase">
-                            {cli.nombre.slice(0, 2)}
-                        </div>
-                        {cli.nombre}
-                    </td>
-                    <td className="py-4 px-6 text-sm text-neutral-500">{cli.numero_identificacion}</td>
-                    <td className="py-4 px-6 text-sm text-neutral-500">{cli.email}</td>
-                    <td className="py-4 px-6 text-right">
-                      <Link 
-                        href={`/dashboard/clientes/${cli.id}`}
-                        className="bg-neutral-100 text-neutral-700 hover:bg-neutral-200 px-4 py-2 rounded-lg text-[10px] uppercase font-bold tracking-wider inline-flex items-center gap-1 transition-all active:scale-95"
-                      >
-                        Ver Perfil
-                        <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                      </Link>
-                    </td>
-                  </tr>
+                  <ClientRow
+                    key={cli.id}
+                    id={cli.id}
+                    nombre={cli.nombre}
+                    numero_identificacion={cli.numero_identificacion}
+                    email={cli.email}
+                  />
                 ))}
               </tbody>
             </table>
