@@ -49,9 +49,8 @@ export default function Sidebar() {
             </span>
           </Link>
           <Link
-            href="#"
-            // Using a dummy path for Reports until we implement the actual route
-            className={isActive("/dashboard/reports") ? activeClass : inactiveClass}
+            href="/dashboard/reportes"
+            className={isActive("/dashboard/reportes") ? activeClass : inactiveClass}
           >
             <span className="material-symbols-outlined">assessment</span>
             <span className="font-sans antialiased tracking-tight text-sm font-medium">
