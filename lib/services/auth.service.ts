@@ -3,8 +3,23 @@ import { getDbClient } from "../models/db";
 import { UsuarioSistema, RolUsuario } from "@/lib/models/domain/UsuarioSistema";
 
 export class AuthService {
-  private static async getSiteUrl(): Promise<string> {
-    return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001';
+  /**
+   * Obtiene la URL del sitio desde variables de entorno.
+   * Prioridad:
+   * 1. NEXT_PUBLIC_SITE_URL (variable de entorno)
+   * 2. window.location.origin (origen actual del cliente)
+   * 3. http://localhost:3000 (fallback local para desarrollo)
+   * 
+   * Nota: Esta función debe ejecutarse en contexto de cliente para window.location.origin
+   */
+  private static getSiteUrl(): string {
+    // En server-side (como en Server Actions), window no está disponible
+    if (typeof window === 'undefined') {
+      return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    }
+    
+    // En client-side, priorizar variable de entorno, luego window.location.origin
+    return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin || 'http://localhost:3000';
   }
   /**
    * Conecta con Supabase Auth.
@@ -95,7 +110,7 @@ export class AuthService {
   public static async invitarCliente(email: string, nombre: string) {
     const db = getDbClient();
     
-    const siteUrl = await this.getSiteUrl();
+    const siteUrl = this.getSiteUrl();
     const { data, error } = await db.auth.admin.inviteUserByEmail(email, {
       data: { nombre, is_cliente: true },
       redirectTo: `${siteUrl}/auth/callback?type=invite`
@@ -113,7 +128,7 @@ export class AuthService {
    * Envía un enlace de recuperación de contraseña ("Olvidé mi contraseña").
    */
   public static async recuperarPassword(email: string) {
-    const siteUrl = await this.getSiteUrl();
+    const siteUrl = this.getSiteUrl();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${siteUrl}/auth/callback?type=recovery`
     });
