@@ -26,43 +26,39 @@ export default function CrearPasswordPage() {
 
     setLoading(true);
     try {
+      // Obtener usuario actual (antes de cambiar contraseña)
+      const { data: authData } = await supabase.auth.getUser();
+      const userEmail = authData?.user?.email;
+
+      console.log("[CrearPassword] Current user email:", userEmail);
+
+      // Verificar en tabla cliente usando el email del usuario autenticado
+      let isCliente = false;
+      if (userEmail) {
+        const { data: clienteData, error: clienteError } = await supabase
+          .from("cliente")
+          .select("id")
+          .eq("email", userEmail)
+          .single();
+
+        isCliente = !clienteError && !!clienteData;
+        console.log("[CrearPassword] Cliente lookup - Email:", userEmail, "Found:", isCliente, "Error:", clienteError?.code);
+      }
+
+      // Ahora cambiar la contraseña
       const { data, error } = await supabase.auth.updateUser({
         password: password,
       });
 
       if (error) throw error;
 
-      console.log("[CrearPassword] User metadata:", data?.user?.user_metadata);
-
-      // Primero intenta usar los metadatos
-      let isCliente = data?.user?.user_metadata?.is_cliente === true;
-      let redirectTarget = isCliente ? "/login-cliente" : "/login";
-
-      // Si no está en metadatos, verifica si existe en la tabla cliente
-      if (!isCliente && data?.user?.email) {
-        const { data: clienteData, error: clienteError } = await supabase
-          .from("cliente")
-          .select("id")
-          .eq("email", data.user.email)
-          .single();
-
-        if (clienteData && !clienteError) {
-          isCliente = true;
-          redirectTarget = "/login-cliente";
-          console.log("[CrearPassword] Found in cliente table, redirecting to:", redirectTarget);
-        } else if (clienteError?.code !== "PGRST116") {
-          // PGRST116 = no rows found, que es lo esperado para un empleado
-          console.warn("[CrearPassword] Error checking cliente table:", clienteError);
-        }
-      }
-
-      console.log("[CrearPassword] Final redirect target:", redirectTarget);
-
       showAlert("success", "Éxito", "Tu contraseña ha sido establecida correctamente. Por favor, inicia sesión.");
 
-      // Cerrar la sesión para forzar que pasen por la pantalla de login manualmente (según requerimiento)
+      // Cerrar la sesión para forzar que pasen por la pantalla de login manualmente
       await supabase.auth.signOut();
 
+      const redirectTarget = isCliente ? "/login-cliente" : "/login";
+      console.log("[CrearPassword] Redirecting to:", redirectTarget);
       router.push(redirectTarget);
 
     } catch (err: any) {
