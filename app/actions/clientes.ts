@@ -229,6 +229,14 @@ export async function reenviarInvitacionCliente(clienteId: string): Promise<Acti
     };
   }
 }
+
+/**
+ * Elimina un cliente completamente del sistema (BD y Auth).
+ * Solo administradores pueden ejecutar esto.
+ *
+ * @param clienteId - UUID del cliente a eliminar
+ */
+export async function eliminarCliente(clienteId: string): Promise<ActionResponse> {
   const supabase = getServerClient();
 
   try {
