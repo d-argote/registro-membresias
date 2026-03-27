@@ -32,8 +32,11 @@ export default function CrearPasswordPage() {
 
       if (error) throw error;
 
+      console.log("[CrearPassword] User metadata:", data?.user?.user_metadata);
+
       // Primero intenta usar los metadatos
       let isCliente = data?.user?.user_metadata?.is_cliente === true;
+      let redirectTarget = isCliente ? "/login-cliente" : "/login";
 
       // Si no está en metadatos, verifica si existe en la tabla cliente
       if (!isCliente && data?.user?.email) {
@@ -45,19 +48,22 @@ export default function CrearPasswordPage() {
 
         if (clienteData && !clienteError) {
           isCliente = true;
+          redirectTarget = "/login-cliente";
+          console.log("[CrearPassword] Found in cliente table, redirecting to:", redirectTarget);
+        } else if (clienteError?.code !== "PGRST116") {
+          // PGRST116 = no rows found, que es lo esperado para un empleado
+          console.warn("[CrearPassword] Error checking cliente table:", clienteError);
         }
       }
+
+      console.log("[CrearPassword] Final redirect target:", redirectTarget);
 
       showAlert("success", "Éxito", "Tu contraseña ha sido establecida correctamente. Por favor, inicia sesión.");
 
       // Cerrar la sesión para forzar que pasen por la pantalla de login manualmente (según requerimiento)
       await supabase.auth.signOut();
 
-      if (isCliente) {
-        router.push("/login-cliente");
-      } else {
-        router.push("/login");
-      }
+      router.push(redirectTarget);
 
     } catch (err: any) {
       console.error("[CrearPassword] Error:", err);
