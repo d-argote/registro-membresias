@@ -245,6 +245,15 @@ export async function eliminarCliente(clienteId: string): Promise<ActionResponse
     };
   }
 }
+
+/**
+ * Updates mutable fields of an existing client record.
+ * Validates and sanitizes all provided fields before writing.
+ *
+ * @param id   - UUID of the client to update
+ * @param data - Partial payload with fields to update
+ */
+export async function actualizarCliente(
   id: string,
   data: Partial<ClientePayload>
 ): Promise<ActionResponse> {
