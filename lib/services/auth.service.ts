@@ -3,9 +3,22 @@ import { getDbClient } from "../models/db";
 import { UsuarioSistema, RolUsuario } from "@/lib/models/domain/UsuarioSistema";
 
 export class AuthService {
-  private static async getSiteUrl(): Promise<string> {
-    return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001';
+  /**
+   * Obtiene la URL del sitio desde variables de entorno.
+   * Prioridad:
+   * 1. NEXT_PUBLIC_SITE_URL (variable de entorno - recomendado)
+   * 2. En client-side: window.location.origin
+   * 3. En desarrollo: http://localhost:3000
+   */
+  private static getSiteUrl(): string {
+    // Server-side (en Server Actions, no hay window disponible)
+    if (typeof window === 'undefined') {
+      return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    }
+    // Client-side: prioridad a variable de entorno, luego origin
+    return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin || 'http://localhost:3000';
   }
+
   /**
    * Conecta con Supabase Auth.
    */
@@ -91,11 +104,12 @@ export class AuthService {
    * Invita a un cliente enviando un Magic Link o Reseteo de Password, 
    * creándolo silenciosamente en Auth.
    * La creación debe usar email_confirm: true para que el correo se envíe de inmediato.
+   * Marca is_cliente: true en metadata para que el flujo de /crear-password redirija a /login-cliente
    */
   public static async invitarCliente(email: string, nombre: string) {
     const db = getDbClient();
     
-    const siteUrl = await this.getSiteUrl();
+    const siteUrl = this.getSiteUrl();
     const { data, error } = await db.auth.admin.inviteUserByEmail(email, {
       data: { nombre, is_cliente: true },
       redirectTo: `${siteUrl}/auth/callback?type=invite`
@@ -111,9 +125,10 @@ export class AuthService {
 
   /**
    * Envía un enlace de recuperación de contraseña ("Olvidé mi contraseña").
+   * Redirige a /crear-password después de validar el token.
    */
   public static async recuperarPassword(email: string) {
-    const siteUrl = await this.getSiteUrl();
+    const siteUrl = this.getSiteUrl();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${siteUrl}/auth/callback?type=recovery`
     });
