@@ -1,7 +1,17 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { registrarCliente, verificarClienteExiste } from "@/app/actions/clientes";
+import {
+  isValidEmail,
+  isValidPhone,
+  isValidNombre,
+  isValidIdCC,
+  isValidIdCE,
+  isValidIdPasaporte,
+  isNonEmpty,
+} from "@/lib/validators/common.validator";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,6 +43,8 @@ export default function RegistroCliente() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const { showAlert } = useAlert();
 
   // Paso 1: Datos personales
   const [formData, setFormData] = useState<FormData>({
@@ -48,6 +60,9 @@ export default function RegistroCliente() {
     consentimientoDatos: false,
   });
 
+  // Computed: today's date as ISO yyyy-mm-dd for date input max attribute
+  const todayISO = useMemo(() => new Date().toISOString().split("T")[0], []);
+
   // Paso 2: Estado dinámico de huellas
   const [fingers, setFingers] = useState<Finger[]>([
     { id: 1, name: "Índice Derecho", status: "waiting", score: 0 },
@@ -61,13 +76,94 @@ export default function RegistroCliente() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear the error for this field as user corrects it
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });
+    }
   };
 
-  const handleNextStep = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep(2);
+  /** Validates ID number based on the currently selected document type. */
+  const validateId = (tipo: string, id: string): string | null => {
+    if (!isNonEmpty(id)) return "El número de identificación es obligatorio.";
+    switch (tipo) {
+      case "CC":
+      case "TI":
+        return isValidIdCC(id)
+          ? null
+          : "Cédula / T.I.: solo dígitos, 6–12 números.";
+      case "CE":
+        return isValidIdCE(id)
+          ? null
+          : "Cédula de Extranjería: 6–15 caracteres alfanuméricos.";
+      case "PAS":
+        return isValidIdPasaporte(id)
+          ? null
+          : "Pasaporte: 6–20 caracteres alfanuméricos o guiones.";
+      default:
+        return isValidIdCC(id) ? null : "Número de identificación no válido.";
+    }
   };
+
+  /** Runs all Step-1 validations; returns true only if everything passes. */
+  const handleNextStep = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const errs: Record<string, string> = {};
+
+    // Nombre
+    if (!isNonEmpty(formData.nombre)) {
+      errs.nombre = "El nombre es obligatorio.";
+    } else if (!isValidNombre(formData.nombre.trim())) {
+      errs.nombre = "Solo letras, espacios, guiones y puntos (sin números).";
+    } else if (formData.nombre.trim().length < 2) {
+      errs.nombre = "Mínimo 2 caracteres.";
+    }
+
+    // Identificación
+    const idError = validateId(formData.tipoIdentificacion, formData.identificacion);
+    if (idError) errs.identificacion = idError;
+
+    // Email
+    if (!isNonEmpty(formData.email)) {
+      errs.email = "El correo electrónico es obligatorio.";
+    } else if (!isValidEmail(formData.email)) {
+      errs.email = "Correo no válido (ej. nombre@dominio.com).";
+    }
+
+    // Teléfono
+    if (!isNonEmpty(formData.telefono)) {
+      errs.telefono = "El teléfono es obligatorio.";
+    } else if (!isValidPhone(formData.telefono)) {
+      errs.telefono = "Solo números (ej. 3001234567 o +57 3001234567).";
+    }
+
+    // Fecha de nacimiento (optional, but range-check if provided)
+    if (isNonEmpty(formData.fechaNacimiento)) {
+      const bYear = new Date(formData.fechaNacimiento + "T00:00:00").getFullYear();
+      if (bYear < 1900) errs.fechaNacimiento = "El año no puede ser anterior a 1900.";
+      else if (new Date(formData.fechaNacimiento + "T00:00:00") >= new Date())
+        errs.fechaNacimiento = "La fecha debe ser en el pasado.";
+    }
+
+    setFieldErrors(errs);
+
+    if (Object.keys(errs).length === 0) {
+      setLoading(true);
+      try {
+        const checkRes = await verificarClienteExiste(formData.identificacion, formData.email);
+        if (!checkRes.success) {
+          showAlert("error", "Cliente Existente", checkRes.error.message);
+          return;
+        }
+        setStep(2);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
 
   /** Simula la captura biométrica al hacer clic en una tarjeta activa */
   const simulateCapture = (fingerId: number) => {
@@ -97,69 +193,45 @@ export default function RegistroCliente() {
     }, 800);
   };
 
-  /** Guarda cliente + plantillas biométricas en Supabase */
+  /** Sends client + biometric templates through the validated server action */
   const handleFinalSubmit = async () => {
     if (!fingers.every((f) => f.status === "success")) {
-      alert("Debe capturar las 4 huellas para continuar.");
+      showAlert("warning", "Huellas Incompletas", "Debe capturar las 4 huellas para continuar con el registro.");
       return;
     }
 
     setLoading(true);
     try {
-      // 1. Insertar cliente
-      const { data: clienteData, error: clienteError } = await supabase
-        .from("cliente")
-        .insert([
-          {
-            numero_identificacion: formData.identificacion,
-            nombre: formData.nombre,
-            email: formData.email,
-            telefono: formData.telefono,
-            direccion: formData.direccion || null,
-            fecha_nacimiento: formData.fechaNacimiento || null,
-            tiene_discapacidad: formData.tieneDiscapacidad,
-            descripcion_discapacidad: formData.tieneDiscapacidad
-              ? formData.descripcionDiscapacidad
-              : null,
-          },
-        ])
-        .select()
-        .single();
+      const result = await registrarCliente({
+        cliente: {
+          numero_identificacion: formData.identificacion,
+          tipo_identificacion: formData.tipoIdentificacion,
+          nombre: formData.nombre,
+          email: formData.email,
+          telefono: formData.telefono,
+          direccion: formData.direccion || null,
+          fecha_nacimiento: formData.fechaNacimiento || null,
+          tiene_discapacidad: formData.tieneDiscapacidad,
+          descripcion_discapacidad: formData.tieneDiscapacidad
+            ? formData.descripcionDiscapacidad
+            : null,
+        },
+        plantillas: fingers.map((f) => ({
+          dedo: f.name,
+          score: f.score,
+        })),
+      });
 
-      if (clienteError) throw clienteError;
+      if (!result.success) {
+        showAlert("error", result.error.type === "VALIDATION" ? "Validación" : "Error en Registro", result.error.message);
+        return;
+      }
 
-      const clienteId = clienteData.id as string;
-
-      // PostgREST (Supabase REST API) expects BYTEA columns as base64-encoded strings.
-      // In production this would be the AES-256 encrypted fingerprint buffer.
-      const mockBase64 = () =>
-        btoa(`aes256_mock_${Date.now()}_${Math.random().toString(36).slice(2)}`);
-
-      const plantillas = fingers.map((f) => ({
-        cliente_id: clienteId,
-        dedo: f.name,
-        huella_cifrada: mockBase64(),
-        score_calidad: f.score,
-      }));
-
-      const { error: bioError } = await supabase
-        .from("plantilla_biometrica")
-        .insert(plantillas);
-
-      if (bioError) throw bioError;
-
-      // 3. Éxito — redirigir
-      alert(`✅ Cliente registrado exitosamente.\nUUID: ${clienteId}`);
+      showAlert("success", "Cliente Registrado", "El cliente ha sido guardado exitosamente en el sistema.");
       router.push("/dashboard/clientes");
     } catch (error: unknown) {
       console.error("Error al registrar:", error);
-      // Supabase errors are plain objects with a .message property, not Error instances
-      const msg =
-        error instanceof Error
-          ? error.message
-          : (error as { message?: string })?.message
-          ?? JSON.stringify(error);
-      alert(`❌ Hubo un error al registrar:\n${msg}`);
+      showAlert("error", "Error Inesperado", "Ocurrió un problema de conexión al intentar registrar. Intente de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -227,9 +299,14 @@ export default function RegistroCliente() {
                   name="nombre"
                   value={formData.nombre}
                   onChange={handleChange}
-                  className="bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium focus:ring-2 focus:ring-surface-tint outline-none transition-all placeholder:text-outline-variant"
+                  className={`bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium outline-none transition-all placeholder:text-outline-variant focus:ring-2 ${
+                    fieldErrors.nombre ? "ring-2 ring-red-400" : "focus:ring-surface-tint"
+                  }`}
                   placeholder="Ej. Alejandro Moreno"
                 />
+                {fieldErrors.nombre && (
+                  <p className="text-[11px] text-red-500 font-semibold mt-0.5">{fieldErrors.nombre}</p>
+                )}
               </div>
 
               {/* Tipo Identificación */}
@@ -262,9 +339,15 @@ export default function RegistroCliente() {
                   name="identificacion"
                   value={formData.identificacion}
                   onChange={handleChange}
-                  className="bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium focus:ring-2 focus:ring-surface-tint outline-none transition-all placeholder:text-outline-variant"
-                  placeholder="Ej. 1000234567"
+                  inputMode={["CC", "TI"].includes(formData.tipoIdentificacion) ? "numeric" : "text"}
+                  className={`bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium outline-none transition-all placeholder:text-outline-variant focus:ring-2 ${
+                    fieldErrors.identificacion ? "ring-2 ring-red-400" : "focus:ring-surface-tint"
+                  }`}
+                  placeholder={["CC", "TI"].includes(formData.tipoIdentificacion) ? "Ej. 1000234567" : "Ej. AB123456"}
                 />
+                {fieldErrors.identificacion && (
+                  <p className="text-[11px] text-red-500 font-semibold mt-0.5">{fieldErrors.identificacion}</p>
+                )}
               </div>
 
               {/* Fecha Nacimiento */}
@@ -277,8 +360,15 @@ export default function RegistroCliente() {
                   name="fechaNacimiento"
                   value={formData.fechaNacimiento}
                   onChange={handleChange}
-                  className="bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium focus:ring-2 focus:ring-surface-tint outline-none transition-all cursor-pointer"
+                  min="1900-01-01"
+                  max={todayISO}
+                  className={`bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium outline-none transition-all cursor-pointer focus:ring-2 ${
+                    fieldErrors.fechaNacimiento ? "ring-2 ring-red-400" : "focus:ring-surface-tint"
+                  }`}
                 />
+                {fieldErrors.fechaNacimiento && (
+                  <p className="text-[11px] text-red-500 font-semibold mt-0.5">{fieldErrors.fechaNacimiento}</p>
+                )}
               </div>
 
               {/* Email */}
@@ -292,9 +382,14 @@ export default function RegistroCliente() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium focus:ring-2 focus:ring-surface-tint outline-none transition-all placeholder:text-outline-variant"
+                  className={`bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium outline-none transition-all placeholder:text-outline-variant focus:ring-2 ${
+                    fieldErrors.email ? "ring-2 ring-red-400" : "focus:ring-surface-tint"
+                  }`}
                   placeholder="correo@ejemplo.com"
                 />
+                {fieldErrors.email && (
+                  <p className="text-[11px] text-red-500 font-semibold mt-0.5">{fieldErrors.email}</p>
+                )}
               </div>
 
               {/* Teléfono */}
@@ -308,9 +403,15 @@ export default function RegistroCliente() {
                   name="telefono"
                   value={formData.telefono}
                   onChange={handleChange}
-                  className="bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium focus:ring-2 focus:ring-surface-tint outline-none transition-all placeholder:text-outline-variant"
+                  inputMode="tel"
+                  className={`bg-surface-container-low border-none rounded-lg p-4 text-sm font-medium outline-none transition-all placeholder:text-outline-variant focus:ring-2 ${
+                    fieldErrors.telefono ? "ring-2 ring-red-400" : "focus:ring-surface-tint"
+                  }`}
                   placeholder="+57 300 000 0000"
                 />
+                {fieldErrors.telefono && (
+                  <p className="text-[11px] text-red-500 font-semibold mt-0.5">{fieldErrors.telefono}</p>
+                )}
               </div>
 
               {/* Dirección */}
@@ -403,15 +504,19 @@ export default function RegistroCliente() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4">
-              <button
-                type="submit"
-                className="bg-primary text-on-primary px-8 py-4 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2"
-              >
-                Siguiente Paso
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
-              </button>
-            </div>
+              <div className="flex justify-end pt-6">
+                <button
+                  onClick={handleNextStep}
+                  type="button"
+                  disabled={loading}
+                  className="bg-primary text-on-primary px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loading ? "Verificando..." : "Siguiente Paso"}
+                  <span className="material-symbols-outlined text-sm">
+                    arrow_forward
+                  </span>
+                </button>
+              </div>
           </form>
         )}
 

@@ -73,7 +73,7 @@ export class Membresia {
     const db = getDbClient();
     const { data, error } = await db.from("membresia").select("*").eq("id", this.id).single();
     if (error) throw new Error(error.message);
-    
+
     this.fechaInicio = new Date(data.fecha_inicio + "T00:00:00");
     this.fechaFin = new Date(data.fecha_fin + "T00:00:00");
     this.estado = data.estado_id;
@@ -96,32 +96,32 @@ export class Membresia {
     };
 
     if (this.id) {
-       const { error } = await db.from("membresia").update(payload).eq("id", this.id);
-       if (error) throw new Error("Error actualizando membresia: " + error.message);
+      const { error } = await db.from("membresia").update(payload).eq("id", this.id);
+      if (error) throw new Error("Error actualizando membresia: " + error.message);
     } else {
-       const { data, error } = await db.from("membresia").insert(payload).select().single();
-       if (error) throw new Error("Error creando membresia: " + error.message);
-       this.id = data.id;
+      const { data, error } = await db.from("membresia").insert(payload).select().single();
+      if (error) throw new Error("Error creando membresia: " + error.message);
+      this.id = data.id;
     }
   }
 
   /**
-   * Activa / registra o renueva membresia
+   * Activa / registra o renueva membresia 
    */
   public async activar(): Promise<void> {
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
 
     const diasAAgregar = this.tipoMembresiaId === TipoMembresia.MENSUAL ? 30 : 360;
 
     if (this.estado === EstadoMembresia.ACTIVA && this.fechaFin >= today) {
-       // Renovacion anticipada
-       this.fechaFin = this.addDays(this.fechaFin, diasAAgregar);
+      // Renovacion anticipada
+      this.fechaFin = this.addDays(this.fechaFin, diasAAgregar);
     } else {
-       // Nueva vigencia
-       this.fechaInicio = this.addDays(today, 1);
-       this.fechaFin = this.addDays(this.fechaInicio, diasAAgregar);
-       this.estado = EstadoMembresia.ACTIVA;
+      // Nueva vigencia
+      this.fechaInicio = this.addDays(today, 1);
+      this.fechaFin = this.addDays(this.fechaInicio, diasAAgregar);
+      this.estado = EstadoMembresia.ACTIVA;
     }
     await this.save();
   }
@@ -131,10 +131,10 @@ export class Membresia {
    */
   public async congelar(motivo: string): Promise<void> {
     if (this.estado !== EstadoMembresia.ACTIVA) throw new Error("Solo las vigentes se pueden congelar");
-    
+
     const today = new Date();
-    today.setHours(0,0,0,0);
-    
+    today.setHours(0, 0, 0, 0);
+
     let left = this.diffDays(today, this.fechaFin);
     if (left < 0) left = 0;
 
@@ -145,11 +145,14 @@ export class Membresia {
     await this.save();
   }
 
+  /**
+   * Reactiva membresia.
+   */
   public async reactivar(): Promise<void> {
     if (this.estado !== EstadoMembresia.CONGELADA) throw new Error("Membresia no esta congelada");
-    
+
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
 
     this.fechaReactivacion = today;
     this.fechaFin = this.addDays(today, this.diasPreservados);
@@ -157,69 +160,87 @@ export class Membresia {
     this.diasPreservados = 0;
     this.fechaCongelamiento = null;
     this.motivoCongelamiento = null;
-    
+
     await this.save();
   }
 
+  /**
+   * Calcula los dias restantes de la membresia.
+   */
   public calcularDiasRestantes(): number {
     if (this.estado === EstadoMembresia.CONGELADA) return this.diasPreservados;
     if (this.estado !== EstadoMembresia.ACTIVA) return 0;
-    
+
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
     const left = this.diffDays(today, this.fechaFin);
     return left > 0 ? left : 0;
   }
 
+  /**
+   * Verifica si la membresia esta vigente.
+   */
   public estaVigente(): boolean {
     return this.estado === EstadoMembresia.ACTIVA && this.calcularDiasRestantes() > 0;
   }
 
+  /**
+   * Obtiene las transacciones de la membresia.
+   */
   public async getTransacciones(): Promise<TransaccionPago[]> {
     if (!this.id) return [];
     return TransaccionPago.fetchByMembresia(this.id);
   }
 
+  /**
+   * Obtiene el tipo de membresia.
+   */
   public getTipo(): TipoMembresia {
     return this.tipoMembresiaId;
   }
 
+  /**
+   * Obtiene la fecha de fin de la membresia.
+   */
   public getFechaFin(): Date {
     return this.fechaFin;
   }
 
+  /**
+   * Obtiene la fecha de inicio de la membresia.
+   */
   public getFechaInicio(): Date {
     return this.fechaInicio;
   }
-  
+
   public getId(): string | null {
-     return this.id;
+    return this.id;
   }
 
   public getEstado(): EstadoMembresia {
-     return this.estado;
+    return this.estado;
   }
 
   // Metodo factory
   public static async fetchLatestActivaByCliente(clienteId: string): Promise<Membresia | null> {
     const db = getDbClient();
     const { data: m, error } = await db
-        .from('membresia')
-        .select('*')
-        .eq('cliente_id', clienteId)
-        .order('fecha_fin', { ascending: false })
-        .limit(1)
-        .single();
-    
+      .from('membresia')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .order('fecha_fin', { ascending: false })
+      .limit(1)
+      .single();
+
     if (error || !m) return null;
 
     return new Membresia(
-        m.id, m.cliente_id, m.tipo_membresia_id,
-        new Date(m.fecha_inicio + "T00:00:00"),
-        new Date(m.fecha_fin + "T00:00:00"),
-        m.estado_id,
-        m.fecha_congelamiento ? new Date(m.fecha_congelamiento) : null,
-        m.dias_preservados, null, null, m.creado_por
+      m.id, m.cliente_id, m.tipo_membresia_id,
+      new Date(m.fecha_inicio + "T00:00:00"),
+      new Date(m.fecha_fin + "T00:00:00"),
+      m.estado_id,
+      m.fecha_congelamiento ? new Date(m.fecha_congelamiento) : null,
+      m.dias_preservados, null, null, m.creado_por
     );
   }
 }

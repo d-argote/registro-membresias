@@ -3,25 +3,27 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/lib/services/auth.service";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       await AuthService.login(email, password);
       router.push("/dashboard");
-    } catch (err: any) {
-      console.error("Login error:", err);
-      setError(err.message || "Credenciales inválidas. Por favor intente de nuevo.");
+    } catch (err: unknown) {
+      // Log technical detail on the client console; never expose Supabase error messages
+      // to prevent user enumeration (OWASP A07)
+      console.error("[Auth] Login error:", err);
+      showAlert("error", "Error de Acceso", "El correo o contraseña no son correctos. Verifique sus datos e intente de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -72,14 +74,6 @@ export default function LoginPage() {
                 placeholder="••••••••"
               />
             </div>
-
-            {error && (
-              <div className="px-5 py-3 bg-error/10 border border-error/20 rounded-xl">
-                <p className="text-[10px] font-bold text-error uppercase text-center leading-tight">
-                  {error}
-                </p>
-              </div>
-            )}
 
             <button
               type="submit"

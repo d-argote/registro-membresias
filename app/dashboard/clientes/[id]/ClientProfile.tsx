@@ -6,13 +6,16 @@ import { actualizarCliente } from "@/app/actions/clientes";
 import { ESTADO_MEMBRESIA, TIPO_MEMBRESIA } from "@/lib/services/membresia.service";
 import { ReciboPago, type DatosRecibo } from "@/lib/models/ReciboPago";
 import { useRouter } from "next/navigation";
+import { isValidEmail, isValidPhone, isValidNombre, isNonEmpty } from "@/lib/validators/common.validator";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 export default function ClientProfile({ cliente, membresia, transacciones }: any) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("pago");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { showAlert } = useAlert();
   const [isEditing, setIsEditing] = useState(false);
+  const [editErrors, setEditErrors] = useState<Record<string, string>>({});
 
   // Form states for Payment
   const [tipo, setTipo] = useState<number>(TIPO_MEMBRESIA.MENSUAL);
@@ -83,11 +86,10 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
   const handlePago = async (e: React.FormEvent) => {
     e.preventDefault();
     if (monto <= 0) {
-      setError("El monto debe ser mayor a 0");
+      showAlert("error", "Validación", "El monto debe ser mayor a 0");
       return;
     }
     setLoading(true);
-    setError(null);
     const res = await registrarPagoAction({
       cliente_id: cliente.id,
       tipo_membresia_id: Number(tipo),
@@ -95,7 +97,11 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
       monto: Number(monto)
     });
     if (!res.success) {
-      setError(String(res.error));
+      const errObj = (res as any).error;
+      const msg = typeof errObj === 'object' && errObj !== null && 'message' in errObj 
+        ? errObj.message 
+        : String(errObj);
+      showAlert("error", "Error en Pago", msg);
     } else if (res.reciboData) {
       // Build ReciboPago from returned server data
       const datos: DatosRecibo = {
@@ -128,30 +134,72 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
   const handleCongelar = async () => {
     if (!membresia) return;
     setLoading(true);
-    setError(null);
     const res = await congelarAction(membresia.id, cliente.id);
-    if (!res.success) setError(String(res.error));
-    else router.refresh();
+    if (!res.success) {
+      const errObj = (res as any).error;
+      const msg = typeof errObj === 'object' && errObj !== null && 'message' in errObj ? errObj.message : String(errObj);
+      showAlert("error", "Error", msg);
+    } else {
+      showAlert("success", "Membresía Congelada", "La membresía ha sido congelada exitosamente.");
+      router.refresh();
+    }
     setLoading(false);
   };
 
   const handleReactivar = async () => {
     if (!membresia) return;
     setLoading(true);
-    setError(null);
     const res = await reactivarAction(membresia.id, cliente.id);
-    if (!res.success) setError(String(res.error));
-    else router.refresh();
+    if (!res.success) {
+      const errObj = (res as any).error;
+      const msg = typeof errObj === 'object' && errObj !== null && 'message' in errObj ? errObj.message : String(errObj);
+      showAlert("error", "Error", msg);
+    } else {
+      showAlert("success", "Membresía Reactivada", "La membresía está activa nuevamente.");
+      router.refresh();
+    }
     setLoading(false);
   };
 
   const handleSaveEdit = async () => {
+    // Frontend validation before hitting the server
+    const errs: Record<string, string> = {};
+
+    if (!isNonEmpty(editData.nombre)) {
+      errs.nombre = "El nombre es obligatorio.";
+    } else if (!isValidNombre(editData.nombre.trim())) {
+      errs.nombre = "Solo letras, espacios, guiones y puntos.";
+    }
+
+    if (!isNonEmpty(editData.email)) {
+      errs.email = "El correo es obligatorio.";
+    } else if (!isValidEmail(editData.email)) {
+      errs.email = "Correo no válido (ej. nombre@dominio.com).";
+    }
+
+    if (!isNonEmpty(editData.telefono)) {
+      errs.telefono = "El teléfono es obligatorio.";
+    } else if (!isValidPhone(editData.telefono)) {
+      errs.telefono = "Solo números (ej. 3001234567).";
+    }
+
+    if (!isNonEmpty(editData.numero_identificacion)) {
+      errs.numero_identificacion = "La identificación es obligatoria.";
+    }
+
+    setEditErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     setLoading(true);
-    setError(null);
     const res = await actualizarCliente(cliente.id, editData);
-    if (!res.success) setError(String(res.error));
-    else {
+    if (!res.success) {
+      const errObj = (res as any).error;
+      const msg = typeof errObj === 'object' && errObj !== null && 'message' in errObj ? errObj.message : String(errObj);
+      showAlert("error", typeof errObj === 'object' && errObj.type === "VALIDATION" ? "Validación" : "Error de Actualización", msg);
+    } else {
+      showAlert("success", "Perfil Actualizado", "Los datos del cliente se han guardado correctamente.");
       setIsEditing(false);
+      setEditErrors({});
       router.refresh();
     }
     setLoading(false);
@@ -207,39 +255,52 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
               <h4 className="text-lg font-bold mb-4">Editar Datos</h4>
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Nombre</label>
-                <input 
-                  type="text" 
-                  value={editData.nombre} 
-                  onChange={(e) => setEditData({...editData, nombre: e.target.value})}
-                  className="bg-surface-container-low border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 text-sm font-medium"
+                <input
+                  type="text"
+                  value={editData.nombre}
+                  onChange={(e) => { setEditData({...editData, nombre: e.target.value}); setEditErrors((p)=>({...p, nombre: ""})); }}
+                  className={`bg-surface-container-low border-0 border-b focus:ring-0 py-2 text-sm font-medium ${
+                    editErrors.nombre ? "border-red-400" : "border-outline-variant/40 focus:border-primary"
+                  }`}
                 />
+                {editErrors.nombre && <p className="text-[10px] text-red-500 font-semibold">{editErrors.nombre}</p>}
               </div>
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Email</label>
-                <input 
-                  type="email" 
-                  value={editData.email} 
-                  onChange={(e) => setEditData({...editData, email: e.target.value})}
-                  className="bg-surface-container-low border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 text-sm font-medium"
+                <input
+                  type="email"
+                  value={editData.email}
+                  onChange={(e) => { setEditData({...editData, email: e.target.value}); setEditErrors((p)=>({...p, email: ""})); }}
+                  className={`bg-surface-container-low border-0 border-b focus:ring-0 py-2 text-sm font-medium ${
+                    editErrors.email ? "border-red-400" : "border-outline-variant/40 focus:border-primary"
+                  }`}
                 />
+                {editErrors.email && <p className="text-[10px] text-red-500 font-semibold">{editErrors.email}</p>}
               </div>
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Teléfono</label>
-                <input 
-                  type="text" 
-                  value={editData.telefono} 
-                  onChange={(e) => setEditData({...editData, telefono: e.target.value})}
-                  className="bg-surface-container-low border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 text-sm font-medium"
+                <input
+                  type="tel"
+                  value={editData.telefono}
+                  inputMode="tel"
+                  onChange={(e) => { setEditData({...editData, telefono: e.target.value}); setEditErrors((p)=>({...p, telefono: ""})); }}
+                  className={`bg-surface-container-low border-0 border-b focus:ring-0 py-2 text-sm font-medium ${
+                    editErrors.telefono ? "border-red-400" : "border-outline-variant/40 focus:border-primary"
+                  }`}
                 />
+                {editErrors.telefono && <p className="text-[10px] text-red-500 font-semibold">{editErrors.telefono}</p>}
               </div>
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Identificación</label>
-                <input 
-                  type="text" 
-                  value={editData.numero_identificacion} 
-                  onChange={(e) => setEditData({...editData, numero_identificacion: e.target.value})}
-                  className="bg-surface-container-low border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 text-sm font-medium"
+                <input
+                  type="text"
+                  value={editData.numero_identificacion}
+                  onChange={(e) => { setEditData({...editData, numero_identificacion: e.target.value}); setEditErrors((p)=>({...p, numero_identificacion: ""})); }}
+                  className={`bg-surface-container-low border-0 border-b focus:ring-0 py-2 text-sm font-medium ${
+                    editErrors.numero_identificacion ? "border-red-400" : "border-outline-variant/40 focus:border-primary"
+                  }`}
                 />
+                {editErrors.numero_identificacion && <p className="text-[10px] text-red-500 font-semibold">{editErrors.numero_identificacion}</p>}
               </div>
 
               <div className="flex gap-2 pt-4">
@@ -337,12 +398,7 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
           </button>
         </div>
 
-        {error && (
-          <div className="bg-error-container text-on-error-container p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
-            <span className="material-symbols-outlined">error</span>
-            <span className="text-sm font-bold">{error}</span>
-          </div>
-        )}
+        
 
         {/* Tab 1: Registrar Pago */}
         {activeTab === "pago" && (
@@ -428,6 +484,9 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
                         type="number"
                         value={monto || ""}
                         onChange={(e) => setMonto(Number(e.target.value))}
+                        min={1}
+                        max={10000000}
+                        step={1}
                         className="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:ring-0 focus:border-primary py-2 pl-6 font-bold text-2xl tracking-tighter"
                         placeholder="0"
                       />

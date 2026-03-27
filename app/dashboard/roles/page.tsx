@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { RolUsuario } from "@/lib/models/usuario_sistema.model";
 import { crearUsuarioAdmin } from "@/app/actions/roles";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 interface StaffMember {
   id: string;
@@ -20,6 +21,7 @@ export default function RolesPage() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [currentUserRole, setCurrentUserRole] = useState<number | null>(null);
+  const { showAlert } = useAlert();
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -66,7 +68,7 @@ export default function RolesPage() {
       setStaff(mappedStaff);
     } catch (error: any) {
       console.error("Error fetching staff:", error);
-      alert(`Error al cargar personal: ${error.message || "Verifique la consola"}`);
+      showAlert("error", "Error al cargar personal", error.message || "Verifique la consola para más detalles.");
     } finally {
       setLoading(false);
     }
@@ -86,19 +88,24 @@ export default function RolesPage() {
         throw new Error("No hay una sesión activa. Por favor, vuelva a iniciar sesión.");
       }
 
-      await crearUsuarioAdmin(
+      const res = await crearUsuarioAdmin(
         session.access_token,
         { nombre: formData.nombre, email: formData.email, password: formData.password },
         formData.rolId
       );
       
-      alert("✅ Usuario creado exitosamente.");
+      if (!res.success) {
+        showAlert("error", res.error.type === "VALIDATION" ? "Validación" : "Error", res.error.message);
+        return;
+      }
+
+      showAlert("success", "Éxito", "Usuario creado correctamente en el sistema.");
       setShowModal(false);
       setFormData({ nombre: "", email: "", password: "", rolId: RolUsuario.ENTRENADOR });
       fetchStaffAndUser();
     } catch (error: any) {
       console.error("Error creating user:", error);
-      alert(`❌ Error: ${error.message || "No se pudo crear el usuario"}`);
+      showAlert("error", "Error Inesperado", error.message || "No se pudo crear el usuario");
     } finally {
       setSaving(false);
     }

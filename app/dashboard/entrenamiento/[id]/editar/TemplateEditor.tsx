@@ -4,6 +4,7 @@ import { useState } from "react";
 import { actualizarPlanAction } from "@/app/actions/entrenamientos";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 type EjercicioData = {
   id: string; // empty string for new exercises
@@ -25,8 +26,7 @@ type InitialPlanData = {
 export default function TemplateEditor({ initialPlan }: { initialPlan: InitialPlanData }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const { showAlert } = useAlert();
   
   const [nombre, setNombre] = useState(initialPlan.nombre);
   const [objetivo, setObjetivo] = useState(initialPlan.objetivo);
@@ -51,17 +51,15 @@ export default function TemplateEditor({ initialPlan }: { initialPlan: InitialPl
 
   const handleSave = async () => {
     if (!nombre) {
-        setError("El nombre del plan es requerido.");
+        showAlert("error", "Validación", "El nombre del plan es requerido.");
         return;
     }
     setLoading(true);
-    setError("");
-    setSuccess(false);
     
     // Fetch actual trainer ID from auth session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
-        setError("No hay una sesión activa. Vuelva a iniciar sesión.");
+        showAlert("error", "Sesión Expirada", "No hay una sesión activa. Vuelva a iniciar sesión.");
         setLoading(false);
         return;
     }
@@ -86,12 +84,11 @@ export default function TemplateEditor({ initialPlan }: { initialPlan: InitialPl
     const result = await actualizarPlanAction(initialPlan.id, dataToSend);
 
     if (result.success) {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      showAlert("success", "Éxito", "¡Plan de entrenamiento actualizado correctamente!");
       router.refresh();
       // Optionally redirect or show success toast
     } else {
-      setError(result.error || "Ocurrió un error al actualizar el plan.");
+      showAlert("error", "Error", result.error || "Ocurrió un error al actualizar el plan.");
     }
     
     setLoading(false);
@@ -99,8 +96,6 @@ export default function TemplateEditor({ initialPlan }: { initialPlan: InitialPl
 
   return (
     <div className="max-w-6xl mx-auto py-12 relative pb-32">
-      {error && <div className="bg-error-container text-error p-4 mb-8 rounded font-bold uppercase tracking-widest text-[10px]">{error}</div>}
-      {success && <div className="bg-surface-tint text-white p-4 mb-8 rounded font-bold uppercase tracking-widest text-[10px]">¡Plan actualizado con éxito!</div>}
       
       {/* Header Section: 12-column grid applied */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">

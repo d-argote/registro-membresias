@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AlertProvider } from "@/components/providers/AlertProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,7 +32,11 @@ export default function RootLayout({
           }
         `}</style>
       </head>
-      <body className="bg-background text-on-background min-h-full flex flex-col font-sans">{children}</body>
+      <body className="bg-background text-on-background min-h-full flex flex-col font-sans">
+        <AlertProvider>
+          {children}
+        </AlertProvider>
+      </body>
     </html>
   );
 }

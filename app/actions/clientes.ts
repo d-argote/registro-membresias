@@ -1,11 +1,16 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
+import { getServerClient } from "@/lib/supabaseServer";
+import { validateClientePayload, sanitizeClientePayload } from "@/lib/validators/cliente.validator";
+import { toUserMessage } from "@/lib/errors/AppError";
+import type { ActionResponse } from "@/lib/models/ActionResponse";
 
-// ─── Tipos ─────────────────────────────────────────────────────────────────
+// ─── Types ─────────────────────────────────────────────────────────────────
 
 interface ClientePayload {
   numero_identificacion: string;
+  tipo_identificacion?: string;
   nombre: string;
   email: string;
   telefono: string;
@@ -25,82 +30,118 @@ interface RegistrarClienteInput {
   plantillas: PlantillaPayload[];
 }
 
-interface RegistrarClienteResult {
-  success: boolean;
-  clienteId?: string;
-  error?: string;
-}
+// ─── Server Actions ─────────────────────────────────────────────────────────
 
-// ─── Cliente servidor (bypasea RLS con service_role) ────────────────────────
-
-function getServerClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  // La service_role key vive solo en el servidor (sin NEXT_PUBLIC_)
-  // Si no está configurada, fallback a anon key (que también puede funcionar
-  // desde el servidor dependiendo del contexto HTTP)
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  return createClient(url, key, {
-    auth: {
-      // En el servidor no necesitamos persistencia de sesión
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-    global: {
-      headers: {
-        // Cuando se usa la service_role key, Supabase bypasea RLS
-        // Este header indica a PostgREST que el caller es el servicio
-        ...(process.env.SUPABASE_SERVICE_ROLE_KEY
-          ? {}
-          : { "x-client-info": "server-action" }),
-      },
-    },
-  });
-}
-
-// ─── Server Action ──────────────────────────────────────────────────────────
-
-export async function registrarCliente(
-  input: RegistrarClienteInput
-): Promise<RegistrarClienteResult> {
+/**
+ * Verifica si ya existe un cliente con la misma identificación o correo.
+ * Utilizado para pre-validar antes del paso de biometría.
+ */
+export async function verificarClienteExiste(
+  identificacion: string,
+  email: string
+): Promise<ActionResponse<boolean>> {
   const supabase = getServerClient();
 
   try {
-    // 1. Insertar cliente
+    const { data, error } = await supabase
+      .from("cliente")
+      .select("id, numero_identificacion, email")
+      .or(`numero_identificacion.eq.${identificacion},email.eq.${email}`)
+      .limit(1);
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      const match = data[0];
+      if (match.numero_identificacion === identificacion) {
+        return { 
+          success: false, 
+          error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente con esta identificación." }
+        };
+      }
+      if (match.email === email) {
+        return { 
+          success: false, 
+          error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente con este correo electrónico." }
+        };
+      }
+    }
+
+    return { success: true, data: false };
+  } catch (err: unknown) {
+    console.error("[verificarClienteExiste] Error:", err);
+    return { 
+      success: false, 
+      error: { type: "SYSTEM", message: "Error al verificar datos. Intente de nuevo." }
+    };
+  }
+}
+
+/**
+ * Registers a new client along with their biometric templates.
+ * Validates and sanitizes all input before writing to the database.
+ * Rolls back the client record if biometric insertion fails.
+ *
+ * @param input - Client data and fingerprint plantillas
+ */
+export async function registrarCliente(
+  input: RegistrarClienteInput
+): Promise<ActionResponse<{ clienteId: string }>> {
+  const supabase = getServerClient();
+
+  try {
+    // 1. Sanitize first, then validate
+    const sanitized = sanitizeClientePayload(input.cliente);
+    const errors = validateClientePayload(sanitized);
+
+    if (errors.length > 0) {
+      return { 
+        success: false, 
+        error: { type: "VALIDATION", message: errors.join(" | ") } 
+      };
+    }
+
+    // 2. Insert client
     const { data: clienteData, error: clienteError } = await supabase
       .from("cliente")
       .insert([
         {
-          numero_identificacion: input.cliente.numero_identificacion,
-          nombre: input.cliente.nombre,
-          email: input.cliente.email,
-          telefono: input.cliente.telefono,
-          direccion: input.cliente.direccion ?? null,
-          fecha_nacimiento: input.cliente.fecha_nacimiento ?? null,
-          tiene_discapacidad: input.cliente.tiene_discapacidad,
-          descripcion_discapacidad:
-            input.cliente.tiene_discapacidad
-              ? (input.cliente.descripcion_discapacidad ?? null)
-              : null,
+          numero_identificacion: sanitized.numero_identificacion,
+          nombre: sanitized.nombre,
+          email: sanitized.email,
+          telefono: sanitized.telefono,
+          direccion: sanitized.direccion ?? null,
+          fecha_nacimiento: sanitized.fecha_nacimiento ?? null,
+          tiene_discapacidad: sanitized.tiene_discapacidad,
+          descripcion_discapacidad: sanitized.tiene_discapacidad
+            ? (sanitized.descripcion_discapacidad ?? null)
+            : null,
         },
       ])
       .select("id")
       .single();
 
     if (clienteError) {
-      console.error("[Server Action] Error insertando cliente:", clienteError);
-      return {
-        success: false,
-        error: clienteError.message ?? JSON.stringify(clienteError),
-      };
+      console.error("[registrarCliente] DB error:", clienteError);
+
+      // PostgreSQL unique violation — give a specific, actionable message
+      if (clienteError.code === "23505") {
+        const detail = clienteError.details ?? clienteError.message ?? "";
+        if (detail.includes("email")) {
+          return { success: false, error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente registrado con ese correo electrónico.", field: "email" } };
+        }
+        if (detail.includes("numero_identificacion")) {
+          return { success: false, error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente registrado con ese número de identificación.", field: "numero_identificacion" } };
+        }
+        return { success: false, error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente con estos datos (correo o identificación duplicados)." } };
+      }
+
+      return { success: false, error: { type: "SYSTEM", message: "No se pudo registrar el cliente debido a un error del sistema." } };
     }
 
     const clienteId = clienteData.id as string;
 
-    // 2. Insertar plantillas biométricas
-    // PostgREST espera BYTEA como string base64 cuando se envía via REST.
+    // 3. Insert biometric templates
     const plantillas = input.plantillas.map((p) => ({
       cliente_id: clienteId,
       dedo: p.dedo,
@@ -115,56 +156,84 @@ export async function registrarCliente(
       .insert(plantillas);
 
     if (bioError) {
-      console.error("[Server Action] Error insertando biometría:", bioError);
-      // Revertir cliente si la biometría falla (best-effort)
+      console.error("[registrarCliente] Biometric error:", bioError);
+      // Best-effort rollback
       await supabase.from("cliente").delete().eq("id", clienteId);
-      return {
-        success: false,
-        error: bioError.message ?? JSON.stringify(bioError),
-      };
+      return { success: false, error: { type: "SYSTEM", message: "Error guardando biometría. El registro fue revertido." } };
     }
 
-    return { success: true, clienteId };
+    revalidatePath("/dashboard/clientes");
+    return { success: true, data: { clienteId } };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error("[Server Action] Error inesperado:", msg);
-    return { success: false, error: msg };
+    console.error("[registrarCliente] Unexpected error:", err);
+    return { 
+      success: false, 
+      error: { type: "SYSTEM", message: toUserMessage(err, "Error inesperado al registrar el cliente.") } 
+    };
   }
 }
 
+/**
+ * Updates mutable fields of an existing client record.
+ * Validates and sanitizes all provided fields before writing.
+ *
+ * @param id   - UUID of the client to update
+ * @param data - Partial payload with fields to update
+ */
 export async function actualizarCliente(
   id: string,
   data: Partial<ClientePayload>
-): Promise<{ success: boolean; error?: string }> {
+): Promise<ActionResponse> {
   const supabase = getServerClient();
 
   try {
+    // Merge partial payload into a full payload for validation
+    const merged: ClientePayload = {
+      nombre: data.nombre ?? "",
+      email: data.email ?? "",
+      telefono: data.telefono ?? "",
+      numero_identificacion: data.numero_identificacion ?? "",
+      direccion: data.direccion,
+      fecha_nacimiento: data.fecha_nacimiento,
+      tiene_discapacidad: data.tiene_discapacidad ?? false,
+      descripcion_discapacidad: data.descripcion_discapacidad,
+    };
+
+    const sanitized = sanitizeClientePayload(merged);
+    const errors = validateClientePayload(sanitized);
+
+    if (errors.length > 0) {
+      return { success: false, error: { type: "VALIDATION", message: errors.join(" | ") } };
+    }
+
     const { error } = await supabase
       .from("cliente")
       .update({
-        numero_identificacion: data.numero_identificacion,
-        nombre: data.nombre,
-        email: data.email,
-        telefono: data.telefono,
-        direccion: data.direccion,
-        fecha_nacimiento: data.fecha_nacimiento,
-        tiene_discapacidad: data.tiene_discapacidad,
-        descripcion_discapacidad: 
-          data.tiene_discapacidad 
-            ? data.descripcion_discapacidad 
-            : null,
+        numero_identificacion: sanitized.numero_identificacion,
+        nombre: sanitized.nombre,
+        email: sanitized.email,
+        telefono: sanitized.telefono,
+        direccion: sanitized.direccion,
+        fecha_nacimiento: sanitized.fecha_nacimiento,
+        tiene_discapacidad: sanitized.tiene_discapacidad,
+        descripcion_discapacidad: sanitized.tiene_discapacidad
+          ? sanitized.descripcion_discapacidad
+          : null,
       })
       .eq("id", id);
 
     if (error) {
-      console.error("[Server Action] Error actualizando cliente:", error);
-      return { success: false, error: error.message };
+      console.error("[actualizarCliente] DB error:", error);
+      if (error.code === "23505") {
+        return { success: false, error: { type: "BUSINESS_LOGIC", message: "Ya existe un cliente con esta identificación o correo." } };
+      }
+      return { success: false, error: { type: "SYSTEM", message: "No se pudo actualizar el cliente debido a un error del sistema." } };
     }
 
-    return { success: true };
+    revalidatePath(`/dashboard/clientes/${id}`);
+    return { success: true, data: undefined };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error("[Server Action] Error inesperado:", msg);
-    return { success: false, error: msg };
+    console.error("[actualizarCliente] Unexpected error:", err);
+    return { success: false, error: { type: "SYSTEM", message: toUserMessage(err, "Error inesperado al actualizar el cliente.") } };
   }
 }

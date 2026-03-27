@@ -4,11 +4,12 @@ import { useState } from "react";
 import { crearPlanAction } from "@/app/actions/entrenamientos";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useAlert } from "@/components/providers/AlertProvider";
 
 export default function TemplateCreator() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { showAlert } = useAlert();
   
   const [nombre, setNombre] = useState("");
   const [objetivo, setObjetivo] = useState("");
@@ -31,16 +32,15 @@ export default function TemplateCreator() {
 
   const handleSave = async () => {
     if (!nombre) {
-        setError("El nombre del plan es requerido.");
+        showAlert("error", "Validación", "El nombre del plan es requerido.");
         return;
     }
     setLoading(true);
-    setError("");
     
     // Fetch actual trainer ID from auth session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
-        setError("No hay una sesión activa. Vuelva a iniciar sesión.");
+        showAlert("error", "Sesión Expirada", "No hay una sesión activa. Vuelva a iniciar sesión.");
         setLoading(false);
         return;
     }
@@ -63,16 +63,16 @@ export default function TemplateCreator() {
 
     const res = await crearPlanAction(dataToSend);
     if (!res.success) {
-        setError(res.error || "No se pudo guardar la plantilla.");
+        showAlert("error", "Error", res.error || "No se pudo guardar la plantilla.");
         setLoading(false);
     } else {
+        showAlert("success", "Éxito", "La plantilla de entrenamiento se ha guardado correctamente.");
         router.push(`/dashboard/entrenamiento/${res.planId}`);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto py-12 relative pb-32">
-      {error && <div className="bg-error-container text-error p-4 mb-8 rounded font-bold uppercase tracking-widest text-[10px]">{error}</div>}
       
       {/* Header Section: Plan Definition */}
       <section className="bg-surface-container-low rounded-xl p-10 mb-12 border border-outline-variant/10 shadow-sm">

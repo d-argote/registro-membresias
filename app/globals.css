@@ -4,15 +4,15 @@
   --background: #f9f9ff;
   --foreground: #111c2d;
   --surface: #ffffff;
-  --surface-tint: #0053db;
-  --surface-container-low: #f0f3ff;
-  --surface-container-highest: #d8e3fb;
+  --surface-tint: #2563eb;
+  --surface-container-low: #eff6ff;
+  --surface-container-highest: #dbeafe;
   --surface-container-lowest: #ffffff;
-  --surface-container-high: #dee8ff;
-  --surface-container: #e7eeff;
-  --surface-variant: #d8e3fb;
-  --surface-dim: #cfdaf2;
-  --surface-bright: #f9f9ff;
+  --surface-container-high: #dbeafe;
+  --surface-container: #e0f2fe;
+  --surface-variant: #dbeafe;
+  --surface-dim: #bfdbfe;
+  --surface-bright: #f0f9ff;
   
   --on-background: #111c2d;
   --on-surface: #111c2d;
@@ -22,8 +22,8 @@
 
   --primary: #000000;
   --on-primary: #ffffff;
-  --primary-container: #00174b;
-  --on-primary-container: #497cff;
+  --primary-container: #1e3a8a;
+  --on-primary-container: #93c5fd;
   --primary-fixed: #dbe1ff;
   --on-primary-fixed: #00174b;
   --primary-fixed-dim: #b4c5ff;

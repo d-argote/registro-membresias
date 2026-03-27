@@ -131,7 +131,8 @@ export class AsignacionPlan {
     if (!this.id) return;
     this.activa = false;
     const db = getDbClient();
-    await db.from("asignacion_plan").update({ activa: false }).eq("id", this.id);
+    const { error } = await db.from("asignacion_plan").update({ activa: false }).eq("id", this.id);
+    if (error) throw new Error("Error desactivando asignación de plan: " + error.message);
   }
 
   public getCliente(): Cliente {
@@ -196,12 +197,13 @@ export class PlanEntrenamiento {
     this.nombre = nombre;
     this.objetivo = objetivo;
     this.fechaModificacion = new Date();
-    
+
     const db = getDbClient();
-    await db.from("plan_entrenamiento").update({
+    const { error } = await db.from("plan_entrenamiento").update({
       nombre: this.nombre,
       objetivo: this.objetivo
     }).eq("id", this.id);
+    if (error) throw new Error("Error modificando plan: " + error.message);
   }
 
   public async activar(): Promise<void> {
