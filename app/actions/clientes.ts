@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getServerClient } from "@/lib/supabaseServer";
-import { validateClientePayload, sanitizeClientePayload } from "@/lib/validators/cliente.validator";
+import { validateClientePayload, sanitizeClientePayload } from "@/lib/utils/validators/cliente.validator";
 import { toUserMessage } from "@/lib/errors/AppError";
 import { AuthService } from "@/lib/services/auth.service";
 import type { ActionResponse } from "@/lib/models/ActionResponse";

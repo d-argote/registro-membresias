@@ -1,6 +1,7 @@
 export interface MembershipAlert {
   id: string;
   clientName: string;
+  clientEmail: string;
   endDate: string;
   daysLeft: number;
 }
@@ -9,12 +10,14 @@ export const mockAlerts: MembershipAlert[] = [
   {
     id: "1",
     clientName: "Alejandro Moreno",
+    clientEmail: "alejandro@example.com",
     endDate: "24 Oct 2023",
     daysLeft: 1,
   },
   {
     id: "2",
     clientName: "Sofía Valencia",
+    clientEmail: "sofia@example.com",
     endDate: "25 Oct 2023",
     daysLeft: 2,
   },

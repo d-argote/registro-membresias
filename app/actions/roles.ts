@@ -1,8 +1,8 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
-import { RolUsuario } from "@/lib/models/usuario_sistema.model";
-import { isValidEmail, isNonEmpty, sanitizeText } from "@/lib/validators/common.validator";
+import { RolUsuario } from "@/lib/models/domain/UsuarioSistema";
+import { isValidEmail, isNonEmpty, sanitizeText } from "@/lib/utils/validators/common.validator";
 import { toUserMessage } from "@/lib/errors/AppError";
 import type { ActionResponse } from "@/lib/models/ActionResponse";
 

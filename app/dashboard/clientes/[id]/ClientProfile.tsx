@@ -4,9 +4,9 @@ import { useState } from "react";
 import { registrarPagoAction, congelarAction, reactivarAction } from "@/app/actions/membresias";
 import { actualizarCliente } from "@/app/actions/clientes";
 import { ESTADO_MEMBRESIA, TIPO_MEMBRESIA } from "@/lib/services/membresia.service";
-import { ReciboPago, type DatosRecibo } from "@/lib/models/ReciboPago";
+import { ReciboPago, type DatosRecibo } from "@/lib/models/domain/ReciboPago";
 import { useRouter } from "next/navigation";
-import { isValidEmail, isValidPhone, isValidNombre, isNonEmpty } from "@/lib/validators/common.validator";
+import { isValidEmail, isValidPhone, isValidNombre, isNonEmpty } from "@/lib/utils/validators/common.validator";
 import { useAlert } from "@/components/providers/AlertProvider";
 
 export default function ClientProfile({ cliente, membresia, transacciones }: any) {

@@ -1,4 +1,4 @@
-import { RolUsuario } from "../lib/models/usuario_sistema.model";
+import { RolUsuario } from "@/lib/models/domain/UsuarioSistema";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });

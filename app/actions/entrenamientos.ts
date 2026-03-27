@@ -1,9 +1,9 @@
 "use server";
 
-import { Entrenador } from "@/lib/models/Entrenador";
-import { Ejercicio } from "@/lib/models/Entrenamiento";
+import { Entrenador } from "@/lib/models/domain/Entrenador";
+import { Ejercicio } from "@/lib/models/domain/Entrenamiento";
 import { revalidatePath } from "next/cache";
-import { isNonEmpty, sanitizeText, clampString } from "@/lib/validators/common.validator";
+import { isNonEmpty, sanitizeText, clampString } from "@/lib/utils/validators/common.validator";
 import { toUserMessage } from "@/lib/errors/AppError";
 
 // ─── Validation helpers ──────────────────────────────────────────────────────

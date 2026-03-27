@@ -1,4 +1,4 @@
-import { PlanEntrenamiento } from "@/lib/models/Entrenamiento";
+import { PlanEntrenamiento } from "@/lib/models/domain/Entrenamiento";
 import { notFound } from "next/navigation";
 import TemplateEditor from "./TemplateEditor";
 

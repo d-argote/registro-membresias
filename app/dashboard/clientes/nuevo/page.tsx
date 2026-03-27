@@ -10,7 +10,7 @@ import {
   isValidIdCE,
   isValidIdPasaporte,
   isNonEmpty,
-} from "@/lib/validators/common.validator";
+} from "@/lib/utils/validators/common.validator";
 import { useAlert } from "@/components/providers/AlertProvider";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

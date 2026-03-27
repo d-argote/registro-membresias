@@ -1,6 +1,6 @@
 import { supabase } from "../supabase";
 import { getDbClient } from "../models/db";
-import { UsuarioSistema, RolUsuario } from "../models/usuario_sistema.model";
+import { UsuarioSistema, RolUsuario } from "@/lib/models/domain/UsuarioSistema";
 
 export class AuthService {
   private static async getSiteUrl(): Promise<string> {

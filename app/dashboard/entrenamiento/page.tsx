@@ -1,4 +1,4 @@
-import { PlanEntrenamiento, Ejercicio } from "@/lib/models/Entrenamiento";
+import { PlanEntrenamiento, Ejercicio } from "@/lib/models/domain/Entrenamiento";
 import PlanListClient from "./PlanListClient";
 
 export const dynamic = "force-dynamic";

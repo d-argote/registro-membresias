@@ -1,7 +1,7 @@
 "use server";
 
-import { ModuloReportes } from "@/lib/models/ModuloReportes";
-import type { ReporteIngresos, AlertaVencimiento, ResumenEjecutivo } from "@/lib/models/ModuloReportes";
+import { ModuloReportes } from "@/lib/models/domain/ModuloReportes";
+import type { ReporteIngresos, AlertaVencimiento, ResumenEjecutivo } from "@/lib/models/domain/ModuloReportes";
 
 const modulo = new ModuloReportes();
 

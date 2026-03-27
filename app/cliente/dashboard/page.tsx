@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { Membresia, EstadoMembresia, TipoMembresia } from "@/lib/models/Membresia";
+import { Membresia, EstadoMembresia, TipoMembresia } from "@/lib/models/domain/Membresia";
 
 export default async function ClienteDashboard() {
   const supabase = await createClient();

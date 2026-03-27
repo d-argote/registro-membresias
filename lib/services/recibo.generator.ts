@@ -4,7 +4,7 @@
  * Contiene toda la lógica de generación de PDF con jsPDF.
  * SOLO SE USA EN EL NAVEGADOR — nunca en Server Components ni Server Actions.
  */
-import type { ReciboPago } from "@/lib/models/ReciboPago";
+import type { ReciboPago } from "@/lib/models/domain/ReciboPago";
 
 const NIT = "NIT: 900.123.456-7";
 const ESTABLECIMIENTO = "GymAccess Cloud - Sede Central";

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { PlanEntrenamiento } from "@/lib/models/Entrenamiento";
+import { PlanEntrenamiento } from "@/lib/models/domain/Entrenamiento";
 import SolicitarRutinaButton from "./SolicitarRutinaButton";
 
 export default async function ClienteRutinaPage() {

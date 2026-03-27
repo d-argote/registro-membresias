@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/lib/services/auth.service";
 import { NotificadorService, Notificacion } from "@/lib/services/notificador.service";
-import { UsuarioSistema } from "@/lib/models/usuario_sistema.model";
+import { UsuarioSistema } from "@/lib/models/domain/UsuarioSistema";
 
 export default function TopNavBar() {
   const router = useRouter();

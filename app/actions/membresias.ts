@@ -1,9 +1,8 @@
 "use server";
 
-import { Membresia, TipoMembresia } from "@/lib/models/Membresia";
-import { TransaccionPago } from "@/lib/models/TransaccionPago";
+import { Membresia, TipoMembresia, TransaccionPago } from "@/lib/models/domain/Membresia";
 import { revalidatePath } from "next/cache";
-import { validatePagoPayload, validateMembresiaIds } from "@/lib/validators/membresia.validator";
+import { validatePagoPayload, validateMembresiaIds } from "@/lib/utils/validators/membresia.validator";
 import { toUserMessage } from "@/lib/errors/AppError";
 
 /**

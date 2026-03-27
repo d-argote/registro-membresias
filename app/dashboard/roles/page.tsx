@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { RolUsuario } from "@/lib/models/usuario_sistema.model";
+import { RolUsuario } from "@/lib/models/domain/UsuarioSistema";
 import { crearUsuarioAdmin } from "@/app/actions/roles";
 import { useAlert } from "@/components/providers/AlertProvider";
 
