@@ -10,7 +10,20 @@ export default function CrearPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const { showAlert } = useAlert();
+
+  // Obtener email del usuario cuando carga la página
+  React.useEffect(() => {
+    const getUser = async () => {
+      const { data: authData } = await supabase.auth.getUser();
+      if (authData?.user?.email) {
+        setUserEmail(authData.user.email);
+        console.log("[CrearPassword] User email loaded:", authData.user.email);
+      }
+    };
+    getUser();
+  }, []);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +31,7 @@ export default function CrearPasswordPage() {
       showAlert("error", "Error", "Las contraseñas no coinciden.");
       return;
     }
-    
+
     if (password.length < 6) {
       showAlert("warning", "Contraseña débil", "Debe tener al menos 6 caracteres.");
       return;
@@ -26,23 +39,34 @@ export default function CrearPasswordPage() {
 
     setLoading(true);
     try {
-      // Obtener usuario actual (antes de cambiar contraseña)
+      // Obtener usuario actual
       const { data: authData } = await supabase.auth.getUser();
-      const userEmail = authData?.user?.email;
+      const email = authData?.user?.email;
 
-      console.log("[CrearPassword] Current user email:", userEmail);
+      if (!email) {
+        throw new Error("No se pudo obtener el email del usuario");
+      }
 
-      // Verificar en tabla cliente usando el email del usuario autenticado
+      console.log("[CrearPassword] Procesando para email:", email);
+
+      // Verificar en tabla cliente - IMPORTANTE: usar .or() para manejar busca correcta
       let isCliente = false;
-      if (userEmail) {
+      try {
         const { data: clienteData, error: clienteError } = await supabase
           .from("cliente")
-          .select("id")
-          .eq("email", userEmail)
-          .single();
+          .select("id, email")
+          .eq("email", email);
 
-        isCliente = !clienteError && !!clienteData;
-        console.log("[CrearPassword] Cliente lookup - Email:", userEmail, "Found:", isCliente, "Error:", clienteError?.code);
+        console.log("[CrearPassword] Cliente query result:", {
+          email,
+          found: !!clienteData && clienteData.length > 0,
+          error: clienteError?.code,
+          data: clienteData
+        });
+
+        isCliente = !!clienteData && clienteData.length > 0;
+      } catch (queryErr) {
+        console.error("[CrearPassword] Query error:", queryErr);
       }
 
       // Ahora cambiar la contraseña
@@ -54,11 +78,15 @@ export default function CrearPasswordPage() {
 
       showAlert("success", "Éxito", "Tu contraseña ha sido establecida correctamente. Por favor, inicia sesión.");
 
-      // Cerrar la sesión para forzar que pasen por la pantalla de login manualmente
+      // Cerrar la sesión
       await supabase.auth.signOut();
 
       const redirectTarget = isCliente ? "/login-cliente" : "/login";
-      console.log("[CrearPassword] Redirecting to:", redirectTarget);
+      console.log("[CrearPassword] Final decision - isCliente:", isCliente, "redirecting to:", redirectTarget);
+
+      // Pequeño delay para asegurar que el signOut se procese
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       router.push(redirectTarget);
 
     } catch (err: any) {
@@ -82,6 +110,11 @@ export default function CrearPasswordPage() {
           <p className="text-[10px] font-bold text-outline uppercase tracking-[0.2em]">
             Por favor, crea una contraseña para activar tu cuenta y acceder al portal.
           </p>
+          {userEmail && (
+            <p className="text-xs text-slate-500 mt-3 font-mono break-all">
+              {userEmail}
+            </p>
+          )}
         </header>
 
         <div className="bg-white dark:bg-slate-900/50 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800/50">
