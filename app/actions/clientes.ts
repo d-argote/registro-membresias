@@ -209,7 +209,7 @@ export async function reenviarInvitacionCliente(clienteId: string): Promise<Acti
     try {
       await AuthService.invitarCliente(clienteData.email, clienteData.nombre);
       console.log(`[reenviarInvitacionCliente] Invitación reenviada exitosamente a: ${clienteData.email}`);
-      return { success: true, data: { message: "Correo reenviado exitosamente" } };
+      return { success: true, data: undefined };
     } catch (inviteError: any) {
       const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
       console.error(`[reenviarInvitacionCliente] Error reenviando invitación: ${errorMsg}`);
