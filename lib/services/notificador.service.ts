@@ -9,6 +9,7 @@ export interface Notificacion {
   tipo: 'ALERTA_VENCIMIENTO' | 'NUEVO_CLIENTE' | 'SISTEMA' | 'SOLICITUD_RUTINA';
   leida: boolean;
   fecha_creacion: string;
+  referencia_id?: string | null;
 }
 
 export class NotificadorService {
@@ -82,7 +83,7 @@ export class NotificadorService {
   /**
    * Genera notificación cuando un cliente solicita una nueva rutina.
    */
-  public static async notificarSolicitudRutina(clienteNombre: string, personalIds: string[]): Promise<void> {
+  public static async notificarSolicitudRutina(clienteNombre: string, clienteId: string, personalIds: string[]): Promise<void> {
     const db = getDbClient();
     
     // Filtramos posibles IDs nulos o vacíos
@@ -94,10 +95,25 @@ export class NotificadorService {
       titulo: "Solicitud de Rutina",
       mensaje: `El cliente ${clienteNombre} ha solicitado que se le asigne un plan de entrenamiento.`,
       tipo: "SOLICITUD_RUTINA",
-      leida: false
+      leida: false,
+      referencia_id: clienteId
     }));
 
     const { error } = await db.from("notificacion").insert(notificaciones);
+    if (error) throw error;
+  }
+
+  /**
+   * Resuelve (marca como leídas) todas las solicitudes de rutina pendientes de un cliente específico.
+   */
+  public static async resolverSolicitudRutina(clienteId: string): Promise<void> {
+    const db = getDbClient();
+    const { error } = await db
+      .from("notificacion")
+      .update({ leida: true })
+      .eq("tipo", "SOLICITUD_RUTINA")
+      .eq("referencia_id", clienteId);
+
     if (error) throw error;
   }
 }

@@ -76,6 +76,15 @@ export default function Sidebar() {
             </span>
           </Link>
           <Link
+            href="/dashboard/asignacion-planes"
+            className={isActive("/dashboard/asignacion-planes") ? activeClass : inactiveClass}
+          >
+            <span className="material-symbols-outlined">assignment_ind</span>
+            <span className="font-sans antialiased tracking-tight text-sm font-medium">
+              Asignación de Planes
+            </span>
+          </Link>
+          <Link
             href="/dashboard/roles"
             className={isActive("/dashboard/roles") ? activeClass : inactiveClass}
           >

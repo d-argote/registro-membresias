@@ -1,11 +1,11 @@
 "use server";
 
-import { getServerClient } from "@/lib/supabaseServer";
+import { createClient } from "@/utils/supabase/server";
 import { NotificadorService } from "@/lib/services/notificador.service";
 import { ActionResponse } from "@/lib/models/ActionResponse";
 
 export async function solicitarRutinaAction(): Promise<ActionResponse<void>> {
-  const supabase = getServerClient();
+  const supabase = await createClient();
 
   try {
     const { data: { user }, error: sessError } = await supabase.auth.getUser();
@@ -55,7 +55,7 @@ export async function solicitarRutinaAction(): Promise<ActionResponse<void>> {
     }
 
     // 3. Notificar
-    await NotificadorService.notificarSolicitudRutina(cliente.nombre, personalIds);
+    await NotificadorService.notificarSolicitudRutina(cliente.nombre, cliente.id, personalIds);
 
     return { success: true, data: undefined };
   } catch (error: any) {

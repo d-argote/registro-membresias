@@ -1,5 +1,6 @@
 import { getDbClient } from "./db";
 import { Cliente } from "./Entrenador"; // Interface exportada de Entrenador.ts
+import { NotificadorService } from "../services/notificador.service";
 
 export class Ejercicio {
   public id: string | null;
@@ -96,7 +97,7 @@ export class AsignacionPlan {
   private planId: string;
   private entrenadorId: string | null;
   private fechaAsignacion: Date;
-  private activa: boolean;
+  private activo: boolean;
 
   constructor(
     id: string | null,
@@ -104,14 +105,14 @@ export class AsignacionPlan {
     planId: string,
     entrenadorId: string | null,
     fechaAsignacion: Date,
-    activa: boolean = true
+    activo: boolean = true
   ) {
     this.id = id;
     this.clienteId = clienteId;
     this.planId = planId;
     this.entrenadorId = entrenadorId;
     this.fechaAsignacion = fechaAsignacion;
-    this.activa = activa;
+    this.activo = activo;
   }
 
   public async asignar(): Promise<void> {
@@ -119,8 +120,7 @@ export class AsignacionPlan {
     const { data, error } = await db.from("asignacion_plan").insert({
       cliente_id: this.clienteId,
       plan_id: this.planId,
-      entrenador_id: this.entrenadorId,
-      activa: this.activa
+      activo: this.activo
     }).select().single();
     if (error) throw new Error("Error asignando plan: " + error.message);
     this.id = data.id;
@@ -129,10 +129,25 @@ export class AsignacionPlan {
 
   public async desactivar(): Promise<void> {
     if (!this.id) return;
-    this.activa = false;
+    this.activo = false;
     const db = getDbClient();
-    const { error } = await db.from("asignacion_plan").update({ activa: false }).eq("id", this.id);
+    const { error } = await db.from("asignacion_plan").update({ activo: false }).eq("id", this.id);
     if (error) throw new Error("Error desactivando asignación de plan: " + error.message);
+  }
+
+  public static async asignarNuevo(clienteId: string, planId: string, entrenadorId: string | null): Promise<AsignacionPlan> {
+    const db = getDbClient();
+    // 1. Desactivar planes anteriores del cliente
+    await db.from("asignacion_plan").update({ activo: false }).eq("cliente_id", clienteId).eq("activo", true);
+    
+    // 2. Crear y asignar nueva
+    const nueva = new AsignacionPlan(null, clienteId, planId, entrenadorId, new Date(), true);
+    await nueva.asignar();
+    
+    // 3. Resolver notificaciones pendientes
+    await NotificadorService.resolverSolicitudRutina(clienteId);
+    
+    return nueva;
   }
 
   public getCliente(): Cliente {
@@ -147,8 +162,8 @@ export class AsignacionPlan {
     return this.entrenadorId;
   }
 
-  public isActiva(): boolean {
-    return this.activa;
+  public isActivo(): boolean {
+    return this.activo;
   }
 }
 
@@ -275,7 +290,7 @@ export class PlanEntrenamiento {
       .from("asignacion_plan")
       .select("plan_id")
       .eq("cliente_id", clienteId)
-      .eq("activa", true)
+      .eq("activo", true)
       .order("fecha_asignacion", { ascending: false })
       .limit(1)
       .single();
