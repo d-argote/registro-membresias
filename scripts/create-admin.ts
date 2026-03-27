@@ -1,10 +1,10 @@
-import { AuthService } from "../lib/services/auth.service";
 import { RolUsuario } from "../lib/models/usuario_sistema.model";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 
 async function createAdmin() {
+  const { AuthService } = await import("../lib/services/auth.service");
   try {
     const adminEmail = "admin@kinetic.com";
     const adminPass = "Kinetic2026!";
