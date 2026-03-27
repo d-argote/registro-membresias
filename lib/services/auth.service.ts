@@ -6,16 +6,17 @@ export class AuthService {
   /**
    * Obtiene la URL del sitio desde variables de entorno.
    * Prioridad:
-   * 1. NEXT_PUBLIC_SITE_URL (variable de entorno - recomendado)
-   * 2. En client-side: window.location.origin
-   * 3. En desarrollo: http://localhost:3000
+   * 1. NEXT_PUBLIC_SITE_URL (variable de entorno)
+   * 2. window.location.origin (origen actual del cliente)
+   * 3. http://localhost:3000 (fallback local para desarrollo)
    */
   private static getSiteUrl(): string {
-    // Server-side (en Server Actions, no hay window disponible)
+    // En server-side (como en Server Actions), window no está disponible
     if (typeof window === 'undefined') {
       return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     }
-    // Client-side: prioridad a variable de entorno, luego origin
+
+    // En client-side, priorizar variable de entorno, luego window.location.origin
     return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin || 'http://localhost:3000';
   }
 

@@ -31,12 +31,25 @@ export default function CrearPasswordPage() {
       });
 
       if (error) throw error;
-      
-      // La meta data is_cliente determina a dónde redirigimos
-      const isCliente = data?.user?.user_metadata?.is_cliente === true;
+
+      // Primero intenta usar los metadatos
+      let isCliente = data?.user?.user_metadata?.is_cliente === true;
+
+      // Si no está en metadatos, verifica si existe en la tabla cliente
+      if (!isCliente && data?.user?.email) {
+        const { data: clienteData, error: clienteError } = await supabase
+          .from("cliente")
+          .select("id")
+          .eq("email", data.user.email)
+          .single();
+
+        if (clienteData && !clienteError) {
+          isCliente = true;
+        }
+      }
 
       showAlert("success", "Éxito", "Tu contraseña ha sido establecida correctamente. Por favor, inicia sesión.");
-      
+
       // Cerrar la sesión para forzar que pasen por la pantalla de login manualmente (según requerimiento)
       await supabase.auth.signOut();
 
