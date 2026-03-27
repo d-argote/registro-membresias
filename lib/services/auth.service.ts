@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { getDbClient } from "../models/db";
 import { UsuarioSistema, RolUsuario } from "@/lib/models/domain/UsuarioSistema";
+import { EmailQueueService } from "./email-queue.service";
 
 export class AuthService {
   /**
@@ -103,6 +104,7 @@ export class AuthService {
 
   /**
    * Invita a un cliente enviando una invitación por email.
+   * Si falla por rate limit, lo encola automáticamente para reintentar después.
    * Si el usuario ya existe, intenta enviar enlace de recuperación.
    * Marca is_cliente: true en metadata.
    */
@@ -110,7 +112,7 @@ export class AuthService {
     const db = getDbClient();
     const siteUrl = this.getSiteUrl();
 
-    console.log(`[AuthService.invitarCliente] Iniciando invitación para: ${email}, siteUrl: ${siteUrl}`);
+    console.log(`[AuthService.invitarCliente] Iniciando invitación para: ${email}`);
 
     const { data, error } = await db.auth.admin.inviteUserByEmail(email, {
       data: { nombre, is_cliente: true },
@@ -135,6 +137,20 @@ export class AuthService {
       }
       console.log(`[AuthService] Recovery link enviado exitosamente para: ${email}`);
       return { email, source: "recovery" };
+    }
+
+    // Si es rate limit, encolar para procesamiento posterior
+    if (error && "message" in error && error.message.includes("rate limit")) {
+      console.warn(`[AuthService] Rate limit detectado. Encolando email para ${email}`);
+      try {
+        await EmailQueueService.encolarInvitacion(email, nombre);
+        console.log(`[AuthService] Email encolado exitosamente: ${email}`);
+        return { email, source: "queued", queued: true };
+      } catch (queueError) {
+        const errorMsg = queueError instanceof Error ? queueError.message : String(queueError);
+        console.error(`[AuthService] Error enqueueing: ${errorMsg}`);
+        throw new Error(`No se pudo encolar el email. Por favor intente más tarde.`);
+      }
     }
 
     if (error) {

@@ -165,15 +165,21 @@ export async function registrarCliente(
 
     let emailWarning: string | undefined;
     try {
-      await AuthService.invitarCliente(sanitized.email, sanitized.nombre);
-      console.log(`[registrarCliente] Email enviado exitosamente para: ${sanitized.email}`);
+      const result = await AuthService.invitarCliente(sanitized.email, sanitized.nombre);
+
+      // Si fue encolado, mostrar mensaje diferente
+      if (result && typeof result === 'object' && 'queued' in result && result.queued) {
+        emailWarning = "Nota: El email está en cola y se enviará en pocos minutos.";
+      } else {
+        console.log(`[registrarCliente] Email enviado exitosamente para: ${sanitized.email}`);
+      }
     } catch (inviteError: any) {
       const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
       console.error(`[registrarCliente] Auth invite failed for ${sanitized.email}: ${errorMsg}`);
 
       // Manejo especial para rate limit
       if (errorMsg.includes("rate limit")) {
-        emailWarning = "Nota: El servicio de email está con límite de velocidad. El cliente puede solicitar 'Recuperar contraseña' más tarde.";
+        emailWarning = "Nota: El servicio de email está con límite de velocidad. El email se procesará automáticamente en pocos minutos.";
       } else {
         emailWarning = `Aviso: El correo no se envió (${errorMsg}). Usa el botón 'Reenviar' en la lista de clientes.`;
       }
