@@ -102,26 +102,54 @@ export class AuthService {
   }
 
   /**
-   * Invita a un cliente enviando un Magic Link o Reseteo de Password, 
+   * Invita a un cliente enviando un Magic Link o Reseteo de Password,
    * creándolo silenciosamente en Auth.
-   * La creación debe usar email_confirm: true para que el correo se envíe de inmediato.
+   * Si el usuario ya existe, intenta re-enviar la invitación.
    * Marca is_cliente: true en metadata para que el flujo de /crear-password redirija a /login-cliente
    */
   public static async invitarCliente(email: string, nombre: string) {
     const db = getDbClient();
-    
+
     const siteUrl = this.getSiteUrl();
     const { data, error } = await db.auth.admin.inviteUserByEmail(email, {
       data: { nombre, is_cliente: true },
       redirectTo: `${siteUrl}/auth/callback?type=invite`
     });
 
+    // Si el usuario ya existe (error code "user_already_exists"), intenta enviar recuperación de contraseña
+    if (error && "code" in error && error.code === "user_already_exists") {
+      console.warn(`[AuthService] Usuario ${email} ya existe. Enviando enlace de recuperación...`);
+      // Enviar password reset link en lugar de invitación
+      const { error: resetError } = await db.auth.admin.generateLink({
+        type: "recovery",
+        email: email,
+        options: {
+          redirectTo: `${siteUrl}/auth/callback?type=recovery`
+        }
+      });
+
+      if (resetError) {
+        console.error("[AuthService] Error enviando recovery link:", resetError);
+        throw resetError;
+      }
+      return { email };
+    }
+
     if (error) {
       console.error("[AuthService] Error invitando cliente:", error);
       throw error;
     }
-    
+
     return data;
+  }
+
+  /**
+   * Elimina un usuario de Auth y retorna el ID para limpiar la BD
+   */
+  public static async eliminarUsuarioAuth(userId: string) {
+    const db = getDbClient();
+    const { error } = await db.auth.admin.deleteUser(userId);
+    if (error) throw error;
   }
 
   /**

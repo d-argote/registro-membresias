@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { registrarPagoAction, congelarAction, reactivarAction } from "@/app/actions/membresias";
-import { actualizarCliente } from "@/app/actions/clientes";
+import { actualizarCliente, eliminarCliente } from "@/app/actions/clientes";
 import { ESTADO_MEMBRESIA, TIPO_MEMBRESIA } from "@/lib/services/membresia.service";
 import { ReciboPago, type DatosRecibo } from "@/lib/models/domain/ReciboPago";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
   const { showAlert } = useAlert();
   const [isEditing, setIsEditing] = useState(false);
   const [editErrors, setEditErrors] = useState<Record<string, string>>({});
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Form states for Payment
   const [tipo, setTipo] = useState<number>(TIPO_MEMBRESIA.MENSUAL);
@@ -205,6 +206,21 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
     setLoading(false);
   };
 
+  const handleEliminar = async () => {
+    setLoading(true);
+    const res = await eliminarCliente(cliente.id);
+    if (!res.success) {
+      const errObj = (res as any).error;
+      const msg = typeof errObj === 'object' && errObj !== null && 'message' in errObj ? errObj.message : String(errObj);
+      showAlert("error", "Error al Eliminar", msg);
+      setLoading(false);
+    } else {
+      showAlert("success", "Cliente Eliminado", "El cliente ha sido eliminado permanentemente del sistema.");
+      setLoading(false);
+      router.push("/dashboard/clientes");
+    }
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(amount);
   };
@@ -304,18 +320,26 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
               </div>
 
               <div className="flex gap-2 pt-4">
-                <button 
+                <button
                   onClick={() => setIsEditing(false)}
                   className="flex-1 px-4 py-2 border border-outline-variant text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-surface-container-low"
                 >
                   Cancelar
                 </button>
-                <button 
+                <button
                   onClick={handleSaveEdit}
                   disabled={loading}
                   className="flex-1 px-4 py-2 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-black/90"
                 >
                   {loading ? '...' : 'Guardar'}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  disabled={loading}
+                  className="px-4 py-2 bg-error text-on-error text-[10px] font-black uppercase tracking-widest rounded-lg hover:brightness-110"
+                  title="Eliminar cliente permanentemente"
+                >
+                  <span className="material-symbols-outlined text-lg">delete</span>
                 </button>
               </div>
             </div>
@@ -605,6 +629,42 @@ export default function ClientProfile({ cliente, membresia, transacciones }: any
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-surface-container-lowest rounded-xl p-8 max-w-sm shadow-xl border border-outline-variant/20">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="material-symbols-outlined text-error text-2xl" style={{fontVariationSettings: "'FILL' 1"}}>warning</span>
+              <h3 className="text-lg font-black text-on-surface">Eliminar Cliente</h3>
+            </div>
+            <p className="text-sm text-on-surface-variant mb-6">
+              ¿Estás seguro de que deseas eliminar permanentemente a <strong>{cliente.nombre}</strong>? Esta acción no se puede deshacer. Se eliminarán:
+            </p>
+            <ul className="text-xs text-on-surface-variant mb-6 space-y-1 list-disc list-inside">
+              <li>El perfil del cliente</li>
+              <li>Plantillas biométricas</li>
+              <li>Cuenta de acceso (Auth)</li>
+            </ul>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={loading}
+                className="flex-1 px-4 py-3 border border-outline-variant text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-surface-container-low disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleEliminar}
+                disabled={loading}
+                className="flex-1 px-4 py-3 bg-error text-on-error text-[10px] font-black uppercase tracking-widest rounded-lg hover:brightness-110 disabled:opacity-50"
+              >
+                {loading ? 'Eliminando...' : 'Sí, Eliminar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

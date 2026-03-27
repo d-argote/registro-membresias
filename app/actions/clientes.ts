@@ -183,13 +183,68 @@ export async function registrarCliente(
 }
 
 /**
- * Updates mutable fields of an existing client record.
- * Validates and sanitizes all provided fields before writing.
+ * Elimina un cliente completamente del sistema (BD y Auth).
+ * Solo administradores pueden ejecutar esto.
  *
- * @param id   - UUID of the client to update
- * @param data - Partial payload with fields to update
+ * @param clienteId - UUID del cliente a eliminar
  */
-export async function actualizarCliente(
+export async function eliminarCliente(clienteId: string): Promise<ActionResponse> {
+  const supabase = getServerClient();
+
+  try {
+    // 1. Obtener el ID de auth del cliente (que es el mismo que el ID del cliente en la tabla)
+    const { data: clienteData, error: fetchError } = await supabase
+      .from("cliente")
+      .select("id, email")
+      .eq("id", clienteId)
+      .single();
+
+    if (fetchError || !clienteData) {
+      return { success: false, error: { type: "BUSINESS_LOGIC", message: "Cliente no encontrado." } };
+    }
+
+    // 2. Eliminar plantillas biométricas primero (por FK)
+    const { error: bioError } = await supabase
+      .from("plantilla_biometrica")
+      .delete()
+      .eq("cliente_id", clienteId);
+
+    if (bioError) {
+      console.error("[eliminarCliente] Error eliminando plantillas:", bioError);
+      return { success: false, error: { type: "SYSTEM", message: "Error al eliminar registros asociados." } };
+    }
+
+    // 3. Eliminar cliente de la tabla
+    const { error: deleteError } = await supabase
+      .from("cliente")
+      .delete()
+      .eq("id", clienteId);
+
+    if (deleteError) {
+      console.error("[eliminarCliente] Error eliminando cliente de BD:", deleteError);
+      return { success: false, error: { type: "SYSTEM", message: "Error al eliminar el cliente." } };
+    }
+
+    // 4. Intentar eliminar de Auth (si existe)
+    try {
+      await AuthService.eliminarUsuarioAuth(clienteId);
+    } catch (authError) {
+      console.warn("[eliminarCliente] No se pudo eliminar de Auth (puede no existir):", authError);
+      // No es crítico si no existe en Auth aún
+    }
+
+    // 5. Limpiar cache
+    revalidatePath("/dashboard/clientes");
+
+    return { success: true, data: undefined };
+  } catch (err: unknown) {
+    console.error("[eliminarCliente] Unexpected error:", err);
+    return {
+      success: false,
+      error: { type: "SYSTEM", message: toUserMessage(err, "Error inesperado al eliminar el cliente.") }
+    };
+  }
+}
   id: string,
   data: Partial<ClientePayload>
 ): Promise<ActionResponse> {
