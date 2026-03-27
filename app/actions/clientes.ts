@@ -170,7 +170,13 @@ export async function registrarCliente(
     } catch (inviteError: any) {
       const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
       console.error(`[registrarCliente] Auth invite failed for ${sanitized.email}: ${errorMsg}`);
-      emailWarning = `Aviso: El correo no se envió (${errorMsg}). El cliente puede recuperar acceso con "Olvidé mi contraseña".`;
+
+      // Manejo especial para rate limit
+      if (errorMsg.includes("rate limit")) {
+        emailWarning = "Nota: El servicio de email está con límite de velocidad. El cliente puede solicitar 'Recuperar contraseña' más tarde.";
+      } else {
+        emailWarning = `Aviso: El correo no se envió (${errorMsg}). Usa el botón 'Reenviar' en la lista de clientes.`;
+      }
     }
 
     revalidatePath("/dashboard/clientes");
@@ -212,6 +218,19 @@ export async function reenviarInvitacionCliente(clienteId: string): Promise<Acti
       return { success: true, data: undefined };
     } catch (inviteError: any) {
       const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
+
+      // Si es rate limit, sugerir esperar
+      if (errorMsg.includes("rate limit")) {
+        console.error(`[reenviarInvitacionCliente] Rate limit hit: ${errorMsg}`);
+        return {
+          success: false,
+          error: {
+            type: "SYSTEM",
+            message: "Demasiados reintentos. Por favor espera 5 minutos antes de intentar de nuevo."
+          }
+        };
+      }
+
       console.error(`[reenviarInvitacionCliente] Error reenviando invitación: ${errorMsg}`);
       return {
         success: false,
