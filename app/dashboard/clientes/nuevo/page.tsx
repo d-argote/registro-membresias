@@ -227,7 +227,11 @@ export default function RegistroCliente() {
         return;
       }
 
-      showAlert("success", "Cliente Registrado", "El cliente ha sido guardado exitosamente en el sistema.");
+      if (result.data?.emailWarning) {
+        showAlert("warning", "Aviso de Envío", result.data.emailWarning);
+      } else {
+        showAlert("success", "Cliente Registrado", "El cliente ha sido guardado exitosamente en el sistema.");
+      }
       router.push("/dashboard/clientes");
     } catch (error: unknown) {
       console.error("Error al registrar:", error);

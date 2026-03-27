@@ -29,6 +29,23 @@ export default function LoginPage() {
     }
   };
 
+  const handleRecuperarPassword = async () => {
+    if (!email) {
+      showAlert("warning", "Correo Requerido", "Por favor ingresa tu correo electrónico para enviar el enlace de recuperación.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await AuthService.recuperarPassword(email);
+      showAlert("success", "Enlace Enviado", "Revisa tu bandeja de entrada o SPAM para restablecer tu contraseña.");
+    } catch (err: unknown) {
+      console.error("[Auth] Reset password error:", err);
+      showAlert("error", "Error", "No se pudo enviar el enlace. Verifica que tu correo esté registrado.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 relative overflow-hidden">
       {/* Decorative Background Elements */}
@@ -75,13 +92,24 @@ export default function LoginPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all active:scale-[0.98] shadow-xl shadow-slate-200 dark:shadow-none disabled:opacity-50"
-            >
-              {loading ? "Verificando..." : "Ingresar al Sistema"}
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all active:scale-[0.98] shadow-xl shadow-slate-200 dark:shadow-none disabled:opacity-50"
+              >
+                {loading ? "Verificando..." : "Ingresar al Sistema"}
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleRecuperarPassword}
+                disabled={loading}
+                className="text-[10px] font-bold text-outline uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
           </form>
         </div>
 

@@ -6,7 +6,7 @@ export interface Notificacion {
   usuario_id: string;
   titulo: string;
   mensaje: string;
-  tipo: 'ALERTA_VENCIMIENTO' | 'NUEVO_CLIENTE' | 'SISTEMA';
+  tipo: 'ALERTA_VENCIMIENTO' | 'NUEVO_CLIENTE' | 'SISTEMA' | 'SOLICITUD_RUTINA';
   leida: boolean;
   fecha_creacion: string;
 }
@@ -72,6 +72,28 @@ export class NotificadorService {
       titulo: "Nuevo Cliente Registrado",
       mensaje: `Se ha registrado un nuevo cliente: ${clienteNombre}.`,
       tipo: "NUEVO_CLIENTE",
+      leida: false
+    }));
+
+    const { error } = await db.from("notificacion").insert(notificaciones);
+    if (error) throw error;
+  }
+
+  /**
+   * Genera notificación cuando un cliente solicita una nueva rutina.
+   */
+  public static async notificarSolicitudRutina(clienteNombre: string, personalIds: string[]): Promise<void> {
+    const db = getDbClient();
+    
+    // Filtramos posibles IDs nulos o vacíos
+    const idsValidos = personalIds.filter(id => !!id);
+    if (idsValidos.length === 0) return;
+
+    const notificaciones = idsValidos.map(personalId => ({
+      usuario_id: personalId,
+      titulo: "Solicitud de Rutina",
+      mensaje: `El cliente ${clienteNombre} ha solicitado que se le asigne un plan de entrenamiento.`,
+      tipo: "SOLICITUD_RUTINA",
       leida: false
     }));
 

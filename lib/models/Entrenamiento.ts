@@ -266,4 +266,23 @@ export class PlanEntrenamiento {
     if (error || !data) return null;
     return new PlanEntrenamiento(data.id, data.nombre, data.objetivo, data.activo, new Date(data.fecha_creacion), new Date(data.fecha_creacion), data.autor_id);
   }
+
+  public static async fetchActivoByCliente(clienteId: string): Promise<PlanEntrenamiento | null> {
+    const db = getDbClient();
+    
+    // Primero, obtener la asignación activa
+    const { data: asignacion, error: asignError } = await db
+      .from("asignacion_plan")
+      .select("plan_id")
+      .eq("cliente_id", clienteId)
+      .eq("activa", true)
+      .order("fecha_asignacion", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (asignError || !asignacion) return null;
+
+    // Luego retornar el plan asociado
+    return PlanEntrenamiento.fetchById(asignacion.plan_id);
+  }
 }

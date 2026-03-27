@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getServerClient } from "@/lib/supabaseServer";
 import { validateClientePayload, sanitizeClientePayload } from "@/lib/validators/cliente.validator";
 import { toUserMessage } from "@/lib/errors/AppError";
+import { AuthService } from "@/lib/services/auth.service";
 import type { ActionResponse } from "@/lib/models/ActionResponse";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -86,7 +87,7 @@ export async function verificarClienteExiste(
  */
 export async function registrarCliente(
   input: RegistrarClienteInput
-): Promise<ActionResponse<{ clienteId: string }>> {
+): Promise<ActionResponse<{ clienteId: string; emailWarning?: string }>> {
   const supabase = getServerClient();
 
   try {
@@ -162,8 +163,16 @@ export async function registrarCliente(
       return { success: false, error: { type: "SYSTEM", message: "Error guardando biometría. El registro fue revertido." } };
     }
 
+    let emailWarning: string | undefined;
+    try {
+      await AuthService.invitarCliente(sanitized.email, sanitized.nombre);
+    } catch (inviteError) {
+      console.error("[registrarCliente] Auth invite failed:", inviteError);
+      emailWarning = "Cliente creado con éxito, pero falló el envío del correo de bienvenida. El cliente deberá solicitar recuperación de contraseña luego.";
+    }
+
     revalidatePath("/dashboard/clientes");
-    return { success: true, data: { clienteId } };
+    return { success: true, data: { clienteId, emailWarning } };
   } catch (err: unknown) {
     console.error("[registrarCliente] Unexpected error:", err);
     return { 

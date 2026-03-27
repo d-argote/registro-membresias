@@ -89,8 +89,10 @@ export default function TopNavBar() {
                         <div key={n.id} className="p-3 bg-surface-container-low rounded-lg border border-outline-variant/30 hover:bg-surface-container transition-colors group">
                           <div className="flex justify-between items-start gap-3">
                             <span className={`material-symbols-outlined text-lg mt-0.5 
-                              ${n.tipo === 'ALERTA_VENCIMIENTO' ? 'text-error' : 'text-primary'}`}>
-                              {n.tipo === 'ALERTA_VENCIMIENTO' ? 'warning' : 'info'}
+                              ${n.tipo === 'ALERTA_VENCIMIENTO' ? 'text-error' : 
+                                n.tipo === 'SOLICITUD_RUTINA' ? 'text-surface-tint dark:text-blue-400' : 'text-primary dark:text-white'}`}>
+                              {n.tipo === 'ALERTA_VENCIMIENTO' ? 'warning' : 
+                               n.tipo === 'SOLICITUD_RUTINA' ? 'fitness_center' : 'info'}
                             </span>
                             <div className="flex-1">
                               <p className="text-[10px] font-bold text-on-surface uppercase tracking-tight">{n.titulo}</p>
