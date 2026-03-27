@@ -166,9 +166,11 @@ export async function registrarCliente(
     let emailWarning: string | undefined;
     try {
       await AuthService.invitarCliente(sanitized.email, sanitized.nombre);
-    } catch (inviteError) {
-      console.error("[registrarCliente] Auth invite failed:", inviteError);
-      emailWarning = "Cliente creado con éxito, pero falló el envío del correo de bienvenida. El cliente deberá solicitar recuperación de contraseña luego.";
+      console.log(`[registrarCliente] Email enviado exitosamente para: ${sanitized.email}`);
+    } catch (inviteError: any) {
+      const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
+      console.error(`[registrarCliente] Auth invite failed for ${sanitized.email}: ${errorMsg}`);
+      emailWarning = `Aviso: El correo no se envió (${errorMsg}). El cliente puede recuperar acceso con "Olvidé mi contraseña".`;
     }
 
     revalidatePath("/dashboard/clientes");
@@ -183,12 +185,50 @@ export async function registrarCliente(
 }
 
 /**
- * Elimina un cliente completamente del sistema (BD y Auth).
- * Solo administradores pueden ejecutar esto.
+ * Reenvía el correo de invitación a un cliente existente.
+ * Útil si el primer envío falló.
  *
- * @param clienteId - UUID del cliente a eliminar
+ * @param clienteId - UUID del cliente
  */
-export async function eliminarCliente(clienteId: string): Promise<ActionResponse> {
+export async function reenviarInvitacionCliente(clienteId: string): Promise<ActionResponse> {
+  const supabase = getServerClient();
+
+  try {
+    // Obtener datos del cliente
+    const { data: clienteData, error: fetchError } = await supabase
+      .from("cliente")
+      .select("id, email, nombre")
+      .eq("id", clienteId)
+      .single();
+
+    if (fetchError || !clienteData) {
+      return { success: false, error: { type: "BUSINESS_LOGIC", message: "Cliente no encontrado." } };
+    }
+
+    // Reenviar invitación
+    try {
+      await AuthService.invitarCliente(clienteData.email, clienteData.nombre);
+      console.log(`[reenviarInvitacionCliente] Invitación reenviada exitosamente a: ${clienteData.email}`);
+      return { success: true, data: { message: "Correo reenviado exitosamente" } };
+    } catch (inviteError: any) {
+      const errorMsg = inviteError instanceof Error ? inviteError.message : String(inviteError);
+      console.error(`[reenviarInvitacionCliente] Error reenviando invitación: ${errorMsg}`);
+      return {
+        success: false,
+        error: {
+          type: "SYSTEM",
+          message: `No se pudo reenviar el correo: ${errorMsg}`
+        }
+      };
+    }
+  } catch (err: unknown) {
+    console.error("[reenviarInvitacionCliente] Unexpected error:", err);
+    return {
+      success: false,
+      error: { type: "SYSTEM", message: toUserMessage(err, "Error inesperado al reenviar invitación.") }
+    };
+  }
+}
   const supabase = getServerClient();
 
   try {
@@ -228,14 +268,17 @@ export async function eliminarCliente(clienteId: string): Promise<ActionResponse
     // 4. Intentar eliminar de Auth (si existe)
     try {
       await AuthService.eliminarUsuarioAuth(clienteId);
-    } catch (authError) {
-      console.warn("[eliminarCliente] No se pudo eliminar de Auth (puede no existir):", authError);
-      // No es crítico si no existe en Auth aún
+      console.log(`[eliminarCliente] Usuario eliminado correctamente de Auth: ${clienteId}`);
+    } catch (authError: any) {
+      const errorMsg = authError instanceof Error ? authError.message : String(authError);
+      console.warn(`[eliminarCliente] No se pudo eliminar de Auth ${clienteId}: ${errorMsg}`);
+      // Continuar de todas formas - lo importante es que se eliminó de BD
     }
 
     // 5. Limpiar cache
     revalidatePath("/dashboard/clientes");
 
+    console.log(`[eliminarCliente] Cliente ${clienteId} (${clienteData.email}) eliminado exitosamente`);
     return { success: true, data: undefined };
   } catch (err: unknown) {
     console.error("[eliminarCliente] Unexpected error:", err);

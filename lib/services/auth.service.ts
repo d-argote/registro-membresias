@@ -102,24 +102,24 @@ export class AuthService {
   }
 
   /**
-   * Invita a un cliente enviando un Magic Link o Reseteo de Password,
-   * creándolo silenciosamente en Auth.
-   * Si el usuario ya existe, intenta re-enviar la invitación.
-   * Marca is_cliente: true en metadata para que el flujo de /crear-password redirija a /login-cliente
+   * Invita a un cliente enviando una invitación por email.
+   * Si el usuario ya existe, intenta enviar enlace de recuperación.
+   * Marca is_cliente: true en metadata.
    */
   public static async invitarCliente(email: string, nombre: string) {
     const db = getDbClient();
-
     const siteUrl = this.getSiteUrl();
+
+    console.log(`[AuthService.invitarCliente] Iniciando invitación para: ${email}, siteUrl: ${siteUrl}`);
+
     const { data, error } = await db.auth.admin.inviteUserByEmail(email, {
       data: { nombre, is_cliente: true },
       redirectTo: `${siteUrl}/auth/callback?type=invite`
     });
 
-    // Si el usuario ya existe (error code "user_already_exists"), intenta enviar recuperación de contraseña
+    // Si el usuario ya existe, intenta enviar recuperación de contraseña
     if (error && "code" in error && error.code === "user_already_exists") {
       console.warn(`[AuthService] Usuario ${email} ya existe. Enviando enlace de recuperación...`);
-      // Enviar password reset link en lugar de invitación
       const { error: resetError } = await db.auth.admin.generateLink({
         type: "recovery",
         email: email,
@@ -129,17 +129,21 @@ export class AuthService {
       });
 
       if (resetError) {
-        console.error("[AuthService] Error enviando recovery link:", resetError);
-        throw resetError;
+        const errorMsg = resetError instanceof Error ? resetError.message : JSON.stringify(resetError);
+        console.error(`[AuthService] Error enviando recovery link: ${errorMsg}`);
+        throw new Error(`Error enviando recovery link: ${errorMsg}`);
       }
-      return { email };
+      console.log(`[AuthService] Recovery link enviado exitosamente para: ${email}`);
+      return { email, source: "recovery" };
     }
 
     if (error) {
-      console.error("[AuthService] Error invitando cliente:", error);
-      throw error;
+      const errorMsg = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error(`[AuthService] Error invitando cliente ${email}: ${errorMsg}`);
+      throw new Error(`Error en invitación: ${errorMsg}`);
     }
 
+    console.log(`[AuthService] Invitación enviada exitosamente para: ${email}`);
     return data;
   }
 
